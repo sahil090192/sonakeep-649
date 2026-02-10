@@ -13,6 +13,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   currency: 'USD',
   weightUnit: 'grams',
   privacyMode: false,
+  biometricLock: false,
 };
 
 function generateId(): string {

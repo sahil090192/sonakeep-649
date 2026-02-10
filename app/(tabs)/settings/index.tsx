@@ -10,16 +10,18 @@ import {
   Platform,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Eye, EyeOff, Scale, DollarSign, Info, Shield } from 'lucide-react-native';
+import { Eye, EyeOff, Scale, DollarSign, Info, Shield, Fingerprint } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Colors from '@/constants/colors';
 import { useGold } from '@/contexts/GoldContext';
+import { useBiometric } from '@/contexts/BiometricContext';
 import { CURRENCIES, WEIGHT_UNITS } from '@/constants/goldData';
 import { Currency, WeightUnit } from '@/types/gold';
 
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
   const { settings, updateSettings, items } = useGold();
+  const { isEnabled: biometricEnabled, isAvailable: biometricAvailable, biometricType, toggleBiometric } = useBiometric();
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -39,6 +41,14 @@ export default function SettingsScreen() {
   const togglePrivacy = () => {
     if (Platform.OS !== 'web') Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     updateSettings({ privacyMode: !settings.privacyMode });
+  };
+
+  const handleBiometricToggle = async (value: boolean) => {
+    if (Platform.OS !== 'web') Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    const success = await toggleBiometric(value);
+    if (success) {
+      updateSettings({ biometricLock: value });
+    }
   };
 
   return (
@@ -124,6 +134,31 @@ export default function SettingsScreen() {
             </View>
           </View>
         </View>
+
+        {biometricAvailable && (
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>Security</Text>
+            <View style={styles.optionGroup}>
+              <View style={styles.switchRow}>
+                <View style={styles.optionLeft}>
+                  <View style={[styles.optionIcon, biometricEnabled && styles.optionIconActive]}>
+                    <Fingerprint size={16} color={biometricEnabled ? Colors.gold : Colors.textTertiary} />
+                  </View>
+                  <View>
+                    <Text style={styles.optionTitle}>{biometricType} Lock</Text>
+                    <Text style={styles.optionSubtitle}>Require {biometricType.toLowerCase()} to open app</Text>
+                  </View>
+                </View>
+                <Switch
+                  value={biometricEnabled}
+                  onValueChange={handleBiometricToggle}
+                  trackColor={{ false: Colors.cardBorder, true: Colors.goldDark }}
+                  thumbColor={biometricEnabled ? Colors.gold : Colors.textSecondary}
+                />
+              </View>
+            </View>
+          </View>
+        )}
 
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>About</Text>

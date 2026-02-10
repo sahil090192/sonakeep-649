@@ -5,11 +5,22 @@ import React, { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import { GoldProvider } from "@/contexts/GoldContext";
+import { BiometricProvider, useBiometric } from "@/contexts/BiometricContext";
+import LockScreen from "@/components/LockScreen";
 import Colors from "@/constants/colors";
 
 SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
+
+function AppContent() {
+  const { isLocked, isChecking } = useBiometric();
+
+  if (isChecking) return null;
+  if (isLocked) return <LockScreen />;
+
+  return <RootLayoutNav />;
+}
 
 function RootLayoutNav() {
   return (
@@ -47,10 +58,12 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <GoldProvider>
-          <StatusBar style="light" />
-          <RootLayoutNav />
-        </GoldProvider>
+        <BiometricProvider>
+          <GoldProvider>
+            <StatusBar style="light" />
+            <AppContent />
+          </GoldProvider>
+        </BiometricProvider>
       </GestureHandlerRootView>
     </QueryClientProvider>
   );

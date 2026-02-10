@@ -42,4 +42,5 @@ export interface AppSettings {
   currency: Currency;
   weightUnit: WeightUnit;
   privacyMode: boolean;
+  biometricLock: boolean;
 }
