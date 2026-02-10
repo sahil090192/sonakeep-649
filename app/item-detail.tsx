@@ -169,7 +169,7 @@ export default function ItemDetailScreen() {
                 <X size={18} color={Colors.textSecondary} />
               </TouchableOpacity>
               <TouchableOpacity style={[styles.actionBtn, styles.saveBtn]} onPress={handleSaveEdit}>
-                <Check size={18} color={Colors.background} />
+                <Check size={18} color={Colors.white} />
               </TouchableOpacity>
             </>
           ) : (
@@ -204,9 +204,10 @@ export default function ItemDetailScreen() {
         </View>
 
         <View style={styles.valueCard}>
+          <View style={styles.valueAccent} />
           <View style={styles.valueRow}>
             <View>
-              <Text style={styles.valueLabel}>Current Value</Text>
+              <Text style={styles.valueLabel}>CURRENT VALUE</Text>
               <Text style={styles.valueAmount}>
                 {settings.privacyMode ? '••••••' : formatCurrency(currentValue, settings.currency)}
               </Text>
@@ -232,12 +233,12 @@ export default function ItemDetailScreen() {
         </View>
 
         <View style={styles.detailsSection}>
-          <Text style={styles.detailsSectionTitle}>Details</Text>
+          <Text style={styles.detailsSectionTitle}>DETAILS</Text>
 
           {isEditing ? (
             <View style={styles.editFields}>
               <View style={styles.editRow}>
-                <Text style={styles.editLabel}>Weight</Text>
+                <Text style={styles.editLabel}>WEIGHT</Text>
                 <TextInput
                   style={styles.editInput}
                   value={editWeight}
@@ -246,7 +247,7 @@ export default function ItemDetailScreen() {
                 />
               </View>
               <View style={styles.editRow}>
-                <Text style={styles.editLabel}>Purchase Price</Text>
+                <Text style={styles.editLabel}>PURCHASE PRICE</Text>
                 <TextInput
                   style={styles.editInput}
                   value={editPurchasePrice}
@@ -255,7 +256,7 @@ export default function ItemDetailScreen() {
                 />
               </View>
               <View style={styles.editRow}>
-                <Text style={styles.editLabel}>Location</Text>
+                <Text style={styles.editLabel}>LOCATION</Text>
                 <TextInput
                   style={styles.editInput}
                   value={editLocation}
@@ -263,7 +264,7 @@ export default function ItemDetailScreen() {
                 />
               </View>
               <View style={styles.editRow}>
-                <Text style={styles.editLabel}>Notes</Text>
+                <Text style={styles.editLabel}>NOTES</Text>
                 <TextInput
                   style={[styles.editInput, { minHeight: 60 }]}
                   value={editNotes}
@@ -323,10 +324,12 @@ const styles = StyleSheet.create({
   backBtn: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 12,
     backgroundColor: Colors.card,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: Colors.cardBorder,
   },
   headerActions: {
     flexDirection: 'row',
@@ -335,7 +338,7 @@ const styles = StyleSheet.create({
   actionBtn: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 12,
     backgroundColor: Colors.card,
     alignItems: 'center',
     justifyContent: 'center',
@@ -357,23 +360,24 @@ const styles = StyleSheet.create({
   heroIcon: {
     width: 72,
     height: 72,
-    borderRadius: 22,
+    borderRadius: 20,
     backgroundColor: Colors.goldSubtle,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: 'rgba(201, 169, 110, 0.2)',
+    borderColor: Colors.cardBorder,
   },
   heroName: {
     fontSize: 24,
-    fontWeight: '700' as const,
+    fontWeight: '900' as const,
     color: Colors.textPrimary,
     textAlign: 'center',
+    letterSpacing: -0.3,
   },
   heroNameInput: {
     fontSize: 24,
-    fontWeight: '700' as const,
+    fontWeight: '900' as const,
     color: Colors.textPrimary,
     textAlign: 'center',
     borderBottomWidth: 2,
@@ -382,9 +386,11 @@ const styles = StyleSheet.create({
     minWidth: 200,
   },
   heroCat: {
-    fontSize: 14,
+    fontSize: 13,
+    fontWeight: '600' as const,
     color: Colors.textSecondary,
     marginTop: 4,
+    letterSpacing: 0.3,
   },
   valueCard: {
     backgroundColor: Colors.card,
@@ -392,7 +398,17 @@ const styles = StyleSheet.create({
     padding: 18,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: 'rgba(201, 169, 110, 0.15)',
+    borderColor: Colors.cardBorder,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  valueAccent: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 3,
+    backgroundColor: Colors.gold,
   },
   valueRow: {
     flexDirection: 'row',
@@ -400,16 +416,17 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   valueLabel: {
-    fontSize: 12,
-    color: Colors.textSecondary,
-    textTransform: 'uppercase' as const,
-    letterSpacing: 0.5,
+    fontSize: 10,
+    fontWeight: '800' as const,
+    color: Colors.textTertiary,
+    letterSpacing: 1.5,
   },
   valueAmount: {
     fontSize: 28,
-    fontWeight: '700' as const,
-    color: Colors.goldLight,
+    fontWeight: '900' as const,
+    color: Colors.textPrimary,
     marginTop: 4,
+    letterSpacing: -0.5,
   },
   valueRight: {
     alignItems: 'flex-end',
@@ -430,10 +447,11 @@ const styles = StyleSheet.create({
   },
   changeVal: {
     fontSize: 12,
-    fontWeight: '600' as const,
+    fontWeight: '700' as const,
   },
   changeSub: {
     fontSize: 10,
+    fontWeight: '500' as const,
     color: Colors.textTertiary,
     marginTop: 4,
   },
@@ -448,20 +466,22 @@ const styles = StyleSheet.create({
   },
   gainLabel: {
     fontSize: 12,
+    fontWeight: '600' as const,
     color: Colors.textSecondary,
   },
   gainValue: {
     fontSize: 14,
-    fontWeight: '600' as const,
+    fontWeight: '800' as const,
   },
   detailsSection: {
     marginBottom: 20,
   },
   detailsSectionTitle: {
-    fontSize: 16,
-    fontWeight: '600' as const,
-    color: Colors.textPrimary,
+    fontSize: 12,
+    fontWeight: '800' as const,
+    color: Colors.textSecondary,
     marginBottom: 14,
+    letterSpacing: 1.5,
   },
   detailRow: {
     flexDirection: 'row',
@@ -489,14 +509,16 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     fontSize: 13,
+    fontWeight: '600' as const,
     color: Colors.textSecondary,
   },
   detailValue: {
     fontSize: 14,
-    fontWeight: '600' as const,
+    fontWeight: '800' as const,
     color: Colors.textPrimary,
     maxWidth: '45%' as any,
     textAlign: 'right' as const,
+    letterSpacing: -0.2,
   },
   editFields: {
     gap: 12,
@@ -505,15 +527,17 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   editLabel: {
-    fontSize: 12,
-    fontWeight: '600' as const,
-    color: Colors.textSecondary,
+    fontSize: 10,
+    fontWeight: '800' as const,
+    color: Colors.textTertiary,
+    letterSpacing: 1.5,
   },
   editInput: {
     backgroundColor: Colors.card,
     borderRadius: 10,
     padding: 12,
     fontSize: 15,
+    fontWeight: '600' as const,
     color: Colors.textPrimary,
     borderWidth: 1,
     borderColor: Colors.inputBorder,
@@ -528,7 +552,7 @@ const styles = StyleSheet.create({
   },
   soldBtnText: {
     fontSize: 15,
-    fontWeight: '600' as const,
+    fontWeight: '700' as const,
     color: Colors.textSecondary,
   },
   notFound: {
@@ -538,6 +562,7 @@ const styles = StyleSheet.create({
   },
   notFoundText: {
     fontSize: 16,
+    fontWeight: '600' as const,
     color: Colors.textSecondary,
   },
 });

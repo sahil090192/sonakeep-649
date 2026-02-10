@@ -67,7 +67,7 @@ export default function RatesScreen() {
   return (
     <Animated.View style={[styles.container, { paddingTop: insets.top, opacity: fadeAnim }]}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.title}>Gold Rates</Text>
+        <Text style={styles.title}>GOLD RATES</Text>
         <View style={styles.lastUpdated}>
           <Clock size={12} color={Colors.textTertiary} />
           <Text style={styles.lastUpdatedText}>{formatLastUpdated()}</Text>
@@ -80,7 +80,8 @@ export default function RatesScreen() {
         </View>
 
         <View style={styles.spotCard}>
-          <Text style={styles.spotLabel}>24K Spot Price</Text>
+          <View style={styles.spotAccent} />
+          <Text style={styles.spotLabel}>24K SPOT PRICE</Text>
           <Text style={styles.spotValue}>
             {currencySymbol}{getRateDisplay('24K').toFixed(2)}/{unitLabel}
           </Text>
@@ -115,7 +116,7 @@ export default function RatesScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <BarChart3 size={16} color={Colors.gold} />
-            <Text style={styles.sectionTitle}>All Purities</Text>
+            <Text style={styles.sectionTitle}>ALL PURITIES</Text>
           </View>
 
           {PURITIES.map((p) => {
@@ -176,11 +177,11 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   title: {
-    fontSize: 28,
-    fontWeight: '700' as const,
+    fontSize: 26,
+    fontWeight: '900' as const,
     color: Colors.textPrimary,
     marginTop: 12,
-    letterSpacing: -0.5,
+    letterSpacing: 2.5,
   },
   lastUpdated: {
     flexDirection: 'row',
@@ -191,6 +192,7 @@ const styles = StyleSheet.create({
   },
   lastUpdatedText: {
     fontSize: 12,
+    fontWeight: '500' as const,
     color: Colors.textTertiary,
   },
   spotCard: {
@@ -199,18 +201,28 @@ const styles = StyleSheet.create({
     padding: 20,
     marginBottom: 24,
     borderWidth: 1,
-    borderColor: 'rgba(201, 169, 110, 0.2)',
+    borderColor: Colors.cardBorder,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  spotAccent: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 3,
+    backgroundColor: Colors.gold,
   },
   spotLabel: {
-    fontSize: 13,
-    color: Colors.textSecondary,
-    textTransform: 'uppercase' as const,
-    letterSpacing: 0.5,
+    fontSize: 11,
+    fontWeight: '800' as const,
+    color: Colors.textTertiary,
+    letterSpacing: 1.5,
   },
   spotValue: {
     fontSize: 32,
-    fontWeight: '700' as const,
-    color: Colors.goldLight,
+    fontWeight: '900' as const,
+    color: Colors.textPrimary,
     marginTop: 6,
     letterSpacing: -0.5,
   },
@@ -222,11 +234,12 @@ const styles = StyleSheet.create({
   },
   spotChange: {
     fontSize: 14,
-    fontWeight: '600' as const,
+    fontWeight: '700' as const,
     color: Colors.green,
   },
   noChangeText: {
     fontSize: 12,
+    fontWeight: '500' as const,
     color: Colors.textTertiary,
     fontStyle: 'italic' as const,
   },
@@ -241,12 +254,14 @@ const styles = StyleSheet.create({
   },
   perOunceLabel: {
     fontSize: 13,
+    fontWeight: '600' as const,
     color: Colors.textSecondary,
   },
   perOunceValue: {
     fontSize: 16,
-    fontWeight: '600' as const,
+    fontWeight: '800' as const,
     color: Colors.textPrimary,
+    letterSpacing: -0.3,
   },
   section: {
     marginBottom: 24,
@@ -258,9 +273,10 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600' as const,
-    color: Colors.textPrimary,
+    fontSize: 12,
+    fontWeight: '800' as const,
+    color: Colors.textSecondary,
+    letterSpacing: 1.5,
   },
   rateCard: {
     flexDirection: 'row',
@@ -288,16 +304,19 @@ const styles = StyleSheet.create({
   },
   purityBadgeText: {
     fontSize: 13,
-    fontWeight: '700' as const,
+    fontWeight: '900' as const,
     color: Colors.gold,
+    letterSpacing: 0.5,
   },
   purityName: {
     fontSize: 14,
-    fontWeight: '600' as const,
+    fontWeight: '800' as const,
     color: Colors.textPrimary,
+    letterSpacing: -0.2,
   },
   purityFactor: {
     fontSize: 12,
+    fontWeight: '500' as const,
     color: Colors.textSecondary,
     marginTop: 2,
   },
@@ -306,8 +325,9 @@ const styles = StyleSheet.create({
   },
   rateValue: {
     fontSize: 15,
-    fontWeight: '600' as const,
+    fontWeight: '800' as const,
     color: Colors.textPrimary,
+    letterSpacing: -0.3,
   },
   rateBadge: {
     flexDirection: 'row',
@@ -326,7 +346,7 @@ const styles = StyleSheet.create({
   },
   rateChange: {
     fontSize: 11,
-    fontWeight: '600' as const,
+    fontWeight: '700' as const,
   },
   rateChangeGreen: {
     color: Colors.green,
@@ -340,6 +360,7 @@ const styles = StyleSheet.create({
   },
   disclaimerText: {
     fontSize: 12,
+    fontWeight: '500' as const,
     color: Colors.textTertiary,
     textAlign: 'center',
     lineHeight: 18,

@@ -96,7 +96,7 @@ export default function AddItemScreen() {
           <TouchableOpacity style={styles.closeBtn} onPress={() => router.back()}>
             <X size={20} color={Colors.textPrimary} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Add Item</Text>
+          <Text style={styles.headerTitle}>ADD ITEM</Text>
           <View style={{ width: 40 }} />
         </View>
 
@@ -106,7 +106,7 @@ export default function AddItemScreen() {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.section}>
-            <Text style={styles.label}>Category</Text>
+            <Text style={styles.label}>CATEGORY</Text>
             <View style={styles.categoryRow}>
               {CATEGORIES.map((cat) => {
                 const IconComp = CATEGORY_ICONS[cat.icon];
@@ -131,7 +131,7 @@ export default function AddItemScreen() {
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.label}>Item Name *</Text>
+            <Text style={styles.label}>ITEM NAME *</Text>
             <TextInput
               style={styles.input}
               placeholder="e.g. Wedding Necklace, Gold Bar 50g"
@@ -144,7 +144,7 @@ export default function AddItemScreen() {
 
           <View style={styles.row}>
             <View style={[styles.section, styles.flex]}>
-              <Text style={styles.label}>Weight ({weightAbbr}) *</Text>
+              <Text style={styles.label}>WEIGHT ({weightAbbr}) *</Text>
               <TextInput
                 style={styles.input}
                 placeholder="0.00"
@@ -156,7 +156,7 @@ export default function AddItemScreen() {
               />
             </View>
             <View style={[styles.section, styles.flex]}>
-              <Text style={styles.label}>Purity</Text>
+              <Text style={styles.label}>PURITY</Text>
               <TouchableOpacity
                 style={styles.pickerBtn}
                 onPress={() => setShowPurityPicker(!showPurityPicker)}
@@ -189,7 +189,7 @@ export default function AddItemScreen() {
           )}
 
           <View style={styles.section}>
-            <Text style={styles.label}>Purchase Price ({currencySymbol})</Text>
+            <Text style={styles.label}>PURCHASE PRICE ({currencySymbol})</Text>
             <TextInput
               style={styles.input}
               placeholder="0.00"
@@ -201,7 +201,7 @@ export default function AddItemScreen() {
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.label}>Purchase Date</Text>
+            <Text style={styles.label}>PURCHASE DATE</Text>
             <View style={styles.inputWithIcon}>
               <Calendar size={16} color={Colors.textTertiary} />
               <TextInput
@@ -215,7 +215,7 @@ export default function AddItemScreen() {
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.label}>Storage Location</Text>
+            <Text style={styles.label}>STORAGE LOCATION</Text>
             <View style={styles.inputWithIcon}>
               <MapPin size={16} color={Colors.textTertiary} />
               <TextInput
@@ -229,7 +229,7 @@ export default function AddItemScreen() {
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.label}>Notes</Text>
+            <Text style={styles.label}>NOTES</Text>
             <View style={styles.inputWithIcon}>
               <FileText size={16} color={Colors.textTertiary} style={{ marginTop: 2 }} />
               <TextInput
@@ -285,15 +285,18 @@ const styles = StyleSheet.create({
   closeBtn: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 12,
     backgroundColor: Colors.card,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: Colors.cardBorder,
   },
   headerTitle: {
-    fontSize: 17,
-    fontWeight: '600' as const,
+    fontSize: 14,
+    fontWeight: '900' as const,
     color: Colors.textPrimary,
+    letterSpacing: 2,
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -303,12 +306,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   label: {
-    fontSize: 13,
-    fontWeight: '600' as const,
-    color: Colors.textSecondary,
+    fontSize: 10,
+    fontWeight: '800' as const,
+    color: Colors.textTertiary,
     marginBottom: 8,
-    textTransform: 'uppercase' as const,
-    letterSpacing: 0.3,
+    letterSpacing: 1.5,
   },
   categoryRow: {
     flexDirection: 'row',
@@ -332,17 +334,19 @@ const styles = StyleSheet.create({
   },
   categoryChipText: {
     fontSize: 14,
-    fontWeight: '500' as const,
+    fontWeight: '600' as const,
     color: Colors.textSecondary,
   },
   categoryChipTextActive: {
     color: Colors.gold,
+    fontWeight: '700' as const,
   },
   input: {
     backgroundColor: Colors.card,
     borderRadius: 12,
     padding: 14,
     fontSize: 15,
+    fontWeight: '600' as const,
     color: Colors.textPrimary,
     borderWidth: 1,
     borderColor: Colors.cardBorder,
@@ -361,6 +365,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 14,
     fontSize: 15,
+    fontWeight: '600' as const,
     color: Colors.textPrimary,
   },
   textArea: {
@@ -382,8 +387,8 @@ const styles = StyleSheet.create({
   },
   pickerText: {
     fontSize: 15,
-    fontWeight: '600' as const,
-    color: Colors.goldLight,
+    fontWeight: '800' as const,
+    color: Colors.gold,
   },
   purityOptions: {
     backgroundColor: Colors.card,
@@ -406,11 +411,12 @@ const styles = StyleSheet.create({
   },
   purityOptionText: {
     fontSize: 14,
+    fontWeight: '600' as const,
     color: Colors.textSecondary,
   },
   purityOptionTextActive: {
     color: Colors.gold,
-    fontWeight: '600' as const,
+    fontWeight: '800' as const,
   },
   saveButton: {
     backgroundColor: Colors.gold,
@@ -420,8 +426,9 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   saveButtonText: {
-    fontSize: 16,
-    fontWeight: '700' as const,
-    color: Colors.background,
+    fontSize: 15,
+    fontWeight: '900' as const,
+    color: Colors.white,
+    letterSpacing: 0.5,
   },
 });

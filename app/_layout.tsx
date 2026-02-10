@@ -60,7 +60,7 @@ export default function RootLayout() {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <BiometricProvider>
           <GoldProvider>
-            <StatusBar style="light" />
+            <StatusBar style="dark" />
             <AppContent />
           </GoldProvider>
         </BiometricProvider>

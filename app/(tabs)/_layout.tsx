@@ -11,13 +11,14 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors.gold,
         tabBarInactiveTintColor: Colors.textTertiary,
         tabBarStyle: {
-          backgroundColor: Colors.surface,
+          backgroundColor: Colors.card,
           borderTopColor: Colors.cardBorder,
           borderTopWidth: 1,
         },
         tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: '600' as const,
+          fontSize: 10,
+          fontWeight: '700' as const,
+          letterSpacing: 0.5,
         },
       }}
     >

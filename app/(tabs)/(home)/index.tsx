@@ -13,7 +13,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Plus, TrendingUp, TrendingDown, Weight, Layers, ShieldCheck, Gem, CircleDollarSign, RectangleHorizontal, Crown } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
-import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '@/constants/colors';
 import { useGold, useActiveItems } from '@/contexts/GoldContext';
 import { formatCurrency, formatWeight, getItemCurrentValue, getItemDailyChange } from '@/utils/calculations';
@@ -80,7 +79,7 @@ export default function DashboardScreen() {
         <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
           <View style={styles.header}>
             <View>
-              <Text style={styles.greeting}>Sonakeep</Text>
+              <Text style={styles.greeting}>SONAKEEP</Text>
               <Text style={styles.subtitle}>Your Gold Portfolio</Text>
             </View>
             <TouchableOpacity
@@ -89,38 +88,31 @@ export default function DashboardScreen() {
               activeOpacity={0.7}
               testID="add-item-button"
             >
-              <Plus size={20} color={Colors.background} />
+              <Plus size={20} color={Colors.white} />
             </TouchableOpacity>
           </View>
 
           <View style={styles.portfolioCard}>
-            <LinearGradient
-              colors={['#1E1B14', '#15130D']}
-              style={styles.portfolioGradient}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-            >
-              <View style={styles.portfolioAccent} />
-              <Text style={styles.portfolioLabel}>Total Portfolio Value</Text>
-              <Text style={styles.portfolioValue}>
-                {settings.privacyMode ? '••••••' : formatCurrency(portfolio.totalValue, settings.currency)}
-              </Text>
-              <View style={styles.changeRow}>
-                <View style={[styles.changeBadge, isPositive ? styles.changeBadgeGreen : styles.changeBadgeRed]}>
-                  {isPositive ? (
-                    <TrendingUp size={12} color={Colors.green} />
-                  ) : (
-                    <TrendingDown size={12} color={Colors.red} />
-                  )}
-                  <Text style={[styles.changeText, isPositive ? styles.changeTextGreen : styles.changeTextRed]}>
-                    {isPositive ? '+' : ''}{formatCurrency(Math.abs(portfolio.dailyChange), settings.currency)} ({portfolio.dailyChangePercent.toFixed(2)}%)
-                  </Text>
-                </View>
-                <Text style={styles.changePeriod}>
-                  {rateData?.lastUpdated ? 'daily' : 'no data'}
+            <View style={styles.portfolioAccent} />
+            <Text style={styles.portfolioLabel}>TOTAL PORTFOLIO VALUE</Text>
+            <Text style={styles.portfolioValue}>
+              {settings.privacyMode ? '••••••' : formatCurrency(portfolio.totalValue, settings.currency)}
+            </Text>
+            <View style={styles.changeRow}>
+              <View style={[styles.changeBadge, isPositive ? styles.changeBadgeGreen : styles.changeBadgeRed]}>
+                {isPositive ? (
+                  <TrendingUp size={12} color={Colors.green} />
+                ) : (
+                  <TrendingDown size={12} color={Colors.red} />
+                )}
+                <Text style={[styles.changeText, isPositive ? styles.changeTextGreen : styles.changeTextRed]}>
+                  {isPositive ? '+' : ''}{formatCurrency(Math.abs(portfolio.dailyChange), settings.currency)} ({portfolio.dailyChangePercent.toFixed(2)}%)
                 </Text>
               </View>
-            </LinearGradient>
+              <Text style={styles.changePeriod}>
+                {rateData?.lastUpdated ? 'daily' : 'no data'}
+              </Text>
+            </View>
           </View>
 
           <View style={styles.metricsRow}>
@@ -131,26 +123,26 @@ export default function DashboardScreen() {
               <Text style={styles.metricValue}>
                 {settings.privacyMode ? '••' : formatWeight(portfolio.totalWeight, settings.weightUnit)}
               </Text>
-              <Text style={styles.metricLabel}>Total Weight</Text>
+              <Text style={styles.metricLabel}>WEIGHT</Text>
             </View>
             <View style={styles.metricCard}>
               <View style={styles.metricIconWrap}>
                 <Layers size={16} color={Colors.gold} />
               </View>
               <Text style={styles.metricValue}>{portfolio.itemCount}</Text>
-              <Text style={styles.metricLabel}>Items</Text>
+              <Text style={styles.metricLabel}>ITEMS</Text>
             </View>
             <View style={styles.metricCard}>
               <View style={styles.metricIconWrap}>
                 <ShieldCheck size={16} color={Colors.gold} />
               </View>
               <Text style={styles.metricValue}>{portfolio.averagePurity}</Text>
-              <Text style={styles.metricLabel}>Top Purity</Text>
+              <Text style={styles.metricLabel}>PURITY</Text>
             </View>
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>By Category</Text>
+            <Text style={styles.sectionTitle}>BY CATEGORY</Text>
             <View style={styles.categoryGrid}>
               {CATEGORIES.map((cat) => {
                 const IconComp = CATEGORY_ICONS[cat.icon];
@@ -171,7 +163,7 @@ export default function DashboardScreen() {
           {recentItems.length > 0 && (
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Recent Items</Text>
+                <Text style={styles.sectionTitle}>RECENT ITEMS</Text>
                 <TouchableOpacity onPress={() => router.push('/holdings')}>
                   <Text style={styles.seeAll}>See All</Text>
                 </TouchableOpacity>
@@ -198,7 +190,7 @@ export default function DashboardScreen() {
                 Add your first gold item to begin tracking your portfolio
               </Text>
               <TouchableOpacity style={styles.emptyButton} onPress={handleAddItem}>
-                <Plus size={18} color={Colors.background} />
+                <Plus size={18} color={Colors.white} />
                 <Text style={styles.emptyButtonText}>Add First Item</Text>
               </TouchableOpacity>
             </View>
@@ -264,23 +256,25 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 12,
-    marginBottom: 24,
+    marginBottom: 28,
   },
   greeting: {
-    fontSize: 28,
-    fontWeight: '700' as const,
-    color: Colors.goldLight,
-    letterSpacing: -0.5,
+    fontSize: 26,
+    fontWeight: '900' as const,
+    color: Colors.textPrimary,
+    letterSpacing: 2.5,
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 13,
+    fontWeight: '500' as const,
     color: Colors.textSecondary,
-    marginTop: 2,
+    marginTop: 3,
+    letterSpacing: 0.3,
   },
   addButton: {
     width: 44,
     height: 44,
-    borderRadius: 22,
+    borderRadius: 14,
     backgroundColor: Colors.gold,
     alignItems: 'center',
     justifyContent: 'center',
@@ -289,10 +283,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: 'hidden',
     marginBottom: 16,
+    backgroundColor: Colors.card,
     borderWidth: 1,
-    borderColor: 'rgba(201, 169, 110, 0.2)',
-  },
-  portfolioGradient: {
+    borderColor: Colors.cardBorder,
     padding: 24,
     position: 'relative',
   },
@@ -301,19 +294,18 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 2,
+    height: 3,
     backgroundColor: Colors.gold,
-    opacity: 0.6,
   },
   portfolioLabel: {
-    fontSize: 13,
-    color: Colors.textSecondary,
-    letterSpacing: 0.5,
-    textTransform: 'uppercase' as const,
+    fontSize: 11,
+    fontWeight: '800' as const,
+    color: Colors.textTertiary,
+    letterSpacing: 1.5,
   },
   portfolioValue: {
-    fontSize: 36,
-    fontWeight: '700' as const,
+    fontSize: 34,
+    fontWeight: '900' as const,
     color: Colors.textPrimary,
     marginTop: 8,
     letterSpacing: -1,
@@ -340,7 +332,7 @@ const styles = StyleSheet.create({
   },
   changeText: {
     fontSize: 13,
-    fontWeight: '600' as const,
+    fontWeight: '700' as const,
   },
   changeTextGreen: {
     color: Colors.green,
@@ -349,8 +341,10 @@ const styles = StyleSheet.create({
     color: Colors.red,
   },
   changePeriod: {
-    fontSize: 12,
+    fontSize: 11,
+    fontWeight: '600' as const,
     color: Colors.textTertiary,
+    letterSpacing: 0.5,
   },
   metricsRow: {
     flexDirection: 'row',
@@ -376,13 +370,16 @@ const styles = StyleSheet.create({
   },
   metricValue: {
     fontSize: 17,
-    fontWeight: '700' as const,
+    fontWeight: '900' as const,
     color: Colors.textPrimary,
+    letterSpacing: -0.3,
   },
   metricLabel: {
-    fontSize: 11,
-    color: Colors.textSecondary,
-    marginTop: 2,
+    fontSize: 10,
+    fontWeight: '700' as const,
+    color: Colors.textTertiary,
+    marginTop: 3,
+    letterSpacing: 1,
   },
   section: {
     marginBottom: 28,
@@ -394,15 +391,16 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600' as const,
-    color: Colors.textPrimary,
+    fontSize: 12,
+    fontWeight: '800' as const,
+    color: Colors.textSecondary,
     marginBottom: 14,
+    letterSpacing: 1.5,
   },
   seeAll: {
-    fontSize: 14,
+    fontSize: 13,
     color: Colors.gold,
-    fontWeight: '500' as const,
+    fontWeight: '700' as const,
     marginBottom: 14,
   },
   categoryGrid: {
@@ -431,11 +429,13 @@ const styles = StyleSheet.create({
   },
   categoryName: {
     fontSize: 14,
-    fontWeight: '600' as const,
+    fontWeight: '800' as const,
     color: Colors.textPrimary,
+    letterSpacing: -0.2,
   },
   categoryCount: {
     fontSize: 12,
+    fontWeight: '500' as const,
     color: Colors.textSecondary,
     marginTop: 2,
   },
@@ -463,11 +463,13 @@ const styles = StyleSheet.create({
   },
   recentItemName: {
     fontSize: 15,
-    fontWeight: '600' as const,
+    fontWeight: '800' as const,
     color: Colors.textPrimary,
+    letterSpacing: -0.2,
   },
   recentItemMeta: {
     fontSize: 12,
+    fontWeight: '500' as const,
     color: Colors.textSecondary,
     marginTop: 2,
   },
@@ -476,12 +478,13 @@ const styles = StyleSheet.create({
   },
   recentItemPrice: {
     fontSize: 15,
-    fontWeight: '600' as const,
+    fontWeight: '800' as const,
     color: Colors.textPrimary,
+    letterSpacing: -0.3,
   },
   recentItemChange: {
     fontSize: 12,
-    fontWeight: '500' as const,
+    fontWeight: '600' as const,
     marginTop: 2,
   },
   emptyState: {
@@ -496,15 +499,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: Colors.cardBorder,
   },
   emptyTitle: {
     fontSize: 20,
-    fontWeight: '700' as const,
+    fontWeight: '900' as const,
     color: Colors.textPrimary,
     marginBottom: 8,
+    letterSpacing: -0.3,
   },
   emptySubtitle: {
     fontSize: 14,
+    fontWeight: '500' as const,
     color: Colors.textSecondary,
     textAlign: 'center',
     lineHeight: 20,
@@ -521,8 +528,9 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   emptyButtonText: {
-    fontSize: 16,
-    fontWeight: '600' as const,
-    color: Colors.background,
+    fontSize: 15,
+    fontWeight: '800' as const,
+    color: Colors.white,
+    letterSpacing: 0.3,
   },
 });

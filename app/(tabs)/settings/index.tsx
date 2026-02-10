@@ -54,10 +54,10 @@ export default function SettingsScreen() {
   return (
     <Animated.View style={[styles.container, { paddingTop: insets.top, opacity: fadeAnim }]}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.title}>Settings</Text>
+        <Text style={styles.title}>SETTINGS</Text>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Currency</Text>
+          <Text style={styles.sectionLabel}>CURRENCY</Text>
           <View style={styles.optionGroup}>
             {CURRENCIES.map((c) => (
               <TouchableOpacity
@@ -83,7 +83,7 @@ export default function SettingsScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Weight Unit</Text>
+          <Text style={styles.sectionLabel}>WEIGHT UNIT</Text>
           <View style={styles.optionGroup}>
             {WEIGHT_UNITS.map((u) => (
               <TouchableOpacity
@@ -109,7 +109,7 @@ export default function SettingsScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>Privacy</Text>
+          <Text style={styles.sectionLabel}>PRIVACY</Text>
           <View style={styles.optionGroup}>
             <View style={styles.switchRow}>
               <View style={styles.optionLeft}>
@@ -128,8 +128,8 @@ export default function SettingsScreen() {
               <Switch
                 value={settings.privacyMode}
                 onValueChange={togglePrivacy}
-                trackColor={{ false: Colors.cardBorder, true: Colors.goldDark }}
-                thumbColor={settings.privacyMode ? Colors.gold : Colors.textSecondary}
+                trackColor={{ false: Colors.cardBorder, true: Colors.goldLight }}
+                thumbColor={settings.privacyMode ? Colors.gold : Colors.textTertiary}
               />
             </View>
           </View>
@@ -137,7 +137,7 @@ export default function SettingsScreen() {
 
         {biometricAvailable && (
           <View style={styles.section}>
-            <Text style={styles.sectionLabel}>Security</Text>
+            <Text style={styles.sectionLabel}>SECURITY</Text>
             <View style={styles.optionGroup}>
               <View style={styles.switchRow}>
                 <View style={styles.optionLeft}>
@@ -152,8 +152,8 @@ export default function SettingsScreen() {
                 <Switch
                   value={biometricEnabled}
                   onValueChange={handleBiometricToggle}
-                  trackColor={{ false: Colors.cardBorder, true: Colors.goldDark }}
-                  thumbColor={biometricEnabled ? Colors.gold : Colors.textSecondary}
+                  trackColor={{ false: Colors.cardBorder, true: Colors.goldLight }}
+                  thumbColor={biometricEnabled ? Colors.gold : Colors.textTertiary}
                 />
               </View>
             </View>
@@ -161,7 +161,7 @@ export default function SettingsScreen() {
         )}
 
         <View style={styles.section}>
-          <Text style={styles.sectionLabel}>About</Text>
+          <Text style={styles.sectionLabel}>ABOUT</Text>
           <View style={styles.optionGroup}>
             <View style={styles.infoRow}>
               <View style={styles.optionLeft}>
@@ -203,22 +203,21 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   title: {
-    fontSize: 28,
-    fontWeight: '700' as const,
+    fontSize: 26,
+    fontWeight: '900' as const,
     color: Colors.textPrimary,
     marginTop: 12,
     marginBottom: 24,
-    letterSpacing: -0.5,
+    letterSpacing: 2.5,
   },
   section: {
     marginBottom: 28,
   },
   sectionLabel: {
-    fontSize: 12,
-    fontWeight: '600' as const,
-    color: Colors.textSecondary,
-    textTransform: 'uppercase' as const,
-    letterSpacing: 0.5,
+    fontSize: 10,
+    fontWeight: '800' as const,
+    color: Colors.textTertiary,
+    letterSpacing: 1.5,
     marginBottom: 10,
   },
   optionGroup: {
@@ -257,11 +256,13 @@ const styles = StyleSheet.create({
   },
   optionTitle: {
     fontSize: 15,
-    fontWeight: '500' as const,
+    fontWeight: '700' as const,
     color: Colors.textPrimary,
+    letterSpacing: -0.2,
   },
   optionSubtitle: {
     fontSize: 12,
+    fontWeight: '500' as const,
     color: Colors.textSecondary,
     marginTop: 1,
   },

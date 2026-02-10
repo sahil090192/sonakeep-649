@@ -111,7 +111,7 @@ export default function HoldingsScreen() {
   return (
     <Animated.View style={[styles.container, { paddingTop: insets.top, opacity: fadeAnim }]}>
       <View style={styles.header}>
-        <Text style={styles.title}>Holdings</Text>
+        <Text style={styles.title}>HOLDINGS</Text>
         <TouchableOpacity
           style={styles.addBtn}
           onPress={() => {
@@ -119,7 +119,7 @@ export default function HoldingsScreen() {
             router.push('/add-item');
           }}
         >
-          <Plus size={20} color={Colors.background} />
+          <Plus size={20} color={Colors.white} />
         </TouchableOpacity>
       </View>
 
@@ -143,14 +143,14 @@ export default function HoldingsScreen() {
           style={[styles.filterBtn, showFilters && styles.filterBtnActive]}
           onPress={() => setShowFilters(!showFilters)}
         >
-          <SlidersHorizontal size={18} color={showFilters ? Colors.background : Colors.gold} />
+          <SlidersHorizontal size={18} color={showFilters ? Colors.white : Colors.gold} />
         </TouchableOpacity>
       </View>
 
       {showFilters && (
         <View style={styles.filtersSection}>
           <View style={styles.filterRow}>
-            <Text style={styles.filterLabel}>Category</Text>
+            <Text style={styles.filterLabel}>CATEGORY</Text>
             <View style={styles.chipRow}>
               <TouchableOpacity
                 style={[styles.chip, !selectedCategory && styles.chipActive]}
@@ -172,7 +172,7 @@ export default function HoldingsScreen() {
             </View>
           </View>
           <View style={styles.filterRow}>
-            <Text style={styles.filterLabel}>Sort By</Text>
+            <Text style={styles.filterLabel}>SORT BY</Text>
             <View style={styles.chipRow}>
               {SORTS.map((s) => (
                 <TouchableOpacity
@@ -225,15 +225,15 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   title: {
-    fontSize: 28,
-    fontWeight: '700' as const,
+    fontSize: 26,
+    fontWeight: '900' as const,
     color: Colors.textPrimary,
-    letterSpacing: -0.5,
+    letterSpacing: 2.5,
   },
   addBtn: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 12,
     backgroundColor: Colors.gold,
     alignItems: 'center',
     justifyContent: 'center',
@@ -259,6 +259,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 15,
+    fontWeight: '500' as const,
     color: Colors.textPrimary,
     height: 44,
   },
@@ -284,11 +285,10 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   filterLabel: {
-    fontSize: 12,
-    fontWeight: '600' as const,
-    color: Colors.textSecondary,
-    textTransform: 'uppercase' as const,
-    letterSpacing: 0.5,
+    fontSize: 10,
+    fontWeight: '800' as const,
+    color: Colors.textTertiary,
+    letterSpacing: 1.5,
     marginBottom: 8,
   },
   chipRow: {
@@ -310,19 +310,22 @@ const styles = StyleSheet.create({
   },
   chipText: {
     fontSize: 13,
-    fontWeight: '500' as const,
+    fontWeight: '600' as const,
     color: Colors.textSecondary,
   },
   chipTextActive: {
     color: Colors.gold,
+    fontWeight: '700' as const,
   },
   countRow: {
     paddingHorizontal: 20,
     marginBottom: 8,
   },
   countText: {
-    fontSize: 13,
+    fontSize: 12,
+    fontWeight: '600' as const,
     color: Colors.textTertiary,
+    letterSpacing: 0.5,
   },
   list: {
     paddingHorizontal: 20,
@@ -352,18 +355,21 @@ const styles = StyleSheet.create({
   },
   itemName: {
     fontSize: 15,
-    fontWeight: '600' as const,
+    fontWeight: '800' as const,
     color: Colors.textPrimary,
+    letterSpacing: -0.2,
   },
   itemMeta: {
     fontSize: 12,
+    fontWeight: '500' as const,
     color: Colors.textSecondary,
     marginTop: 3,
   },
   itemValue: {
     fontSize: 15,
-    fontWeight: '600' as const,
-    color: Colors.goldLight,
+    fontWeight: '800' as const,
+    color: Colors.gold,
+    letterSpacing: -0.3,
   },
   empty: {
     alignItems: 'center',
@@ -372,6 +378,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 15,
+    fontWeight: '600' as const,
     color: Colors.textTertiary,
   },
 });
