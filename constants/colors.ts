@@ -1,0 +1,26 @@
+export const Colors = {
+  background: '#0A0A0A',
+  surface: '#151515',
+  card: '#1C1C1E',
+  cardBorder: '#2A2A2C',
+  gold: '#C9A96E',
+  goldLight: '#E8D5B5',
+  goldDark: '#A88B4A',
+  goldMuted: 'rgba(201, 169, 110, 0.15)',
+  goldSubtle: 'rgba(201, 169, 110, 0.08)',
+  textPrimary: '#F5F5F5',
+  textSecondary: '#8A8A8A',
+  textTertiary: '#5A5A5A',
+  green: '#34C759',
+  greenMuted: 'rgba(52, 199, 89, 0.12)',
+  red: '#FF3B30',
+  redMuted: 'rgba(255, 59, 48, 0.12)',
+  white: '#FFFFFF',
+  black: '#000000',
+  divider: '#2A2A2C',
+  inputBg: '#1C1C1E',
+  inputBorder: '#333336',
+  overlay: 'rgba(0, 0, 0, 0.6)',
+} as const;
+
+export default Colors;
