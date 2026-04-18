@@ -6,7 +6,11 @@
     "start": "bunx rork start -p waxcopwbh4x5g1t6ydjz4 --tunnel",
     "start-web": "bunx rork start -p waxcopwbh4x5g1t6ydjz4 --web --tunnel",
     "start-web-dev": "DEBUG=expo* bunx rork start -p waxcopwbh4x5g1t6ydjz4 --web --tunnel",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "build:ios:development": "bunx eas-cli build --platform ios --profile development",
+    "build:ios:preview": "bunx eas-cli build --platform ios --profile preview",
+    "build:ios:production": "bunx eas-cli build --platform ios --profile production",
+    "submit:ios:production": "bunx eas-cli submit --platform ios --profile production"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
