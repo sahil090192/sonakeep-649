@@ -8,7 +8,7 @@ const FETCH_TIMEOUT_MS = 10000;
 
 type GoldRateSource = 'live' | 'cache' | 'fallback';
 
-authoritative export interface CachedGoldRate {
+export interface CachedGoldRate {
   date: string;
   pricePerOunceUSD: number;
   pricePerGramUSD_24K: number;
