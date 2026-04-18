@@ -10,7 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Eye, EyeOff, Scale, DollarSign, Info, Shield, Fingerprint } from 'lucide-react-native';
+import { Eye, EyeOff, Scale, DollarSign, Info, Shield, Fingerprint, Smartphone, Database, BarChart3, Mail } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Colors from '@/constants/colors';
 import { useGold } from '@/contexts/GoldContext';
@@ -122,7 +122,7 @@ export default function SettingsScreen() {
                 </View>
                 <View>
                   <Text style={styles.optionTitle}>Privacy Mode</Text>
-                  <Text style={styles.optionSubtitle}>Hide monetary values</Text>
+                  <Text style={styles.optionSubtitle}>Hide monetary values across the app interface</Text>
                 </View>
               </View>
               <Switch
@@ -131,6 +131,18 @@ export default function SettingsScreen() {
                 trackColor={{ false: Colors.cardBorder, true: Colors.goldLight }}
                 thumbColor={settings.privacyMode ? Colors.gold : Colors.textTertiary}
               />
+            </View>
+            <View style={styles.divider} />
+            <View style={styles.infoRow}>
+              <View style={styles.optionLeft}>
+                <View style={styles.optionIcon}>
+                  <Smartphone size={16} color={Colors.textTertiary} />
+                </View>
+                <View style={styles.infoTextBlock}>
+                  <Text style={styles.optionTitle}>Local storage</Text>
+                  <Text style={styles.optionSubtitle}>Your holdings and settings are currently stored on this device, not in a cloud account.</Text>
+                </View>
+              </View>
             </View>
           </View>
         </View>
@@ -146,7 +158,7 @@ export default function SettingsScreen() {
                   </View>
                   <View>
                     <Text style={styles.optionTitle}>{biometricType} Lock</Text>
-                    <Text style={styles.optionSubtitle}>Require {biometricType.toLowerCase()} to open app</Text>
+                    <Text style={styles.optionSubtitle}>Require {biometricType.toLowerCase()} to reopen the app</Text>
                   </View>
                 </View>
                 <Switch
@@ -156,9 +168,50 @@ export default function SettingsScreen() {
                   thumbColor={biometricEnabled ? Colors.gold : Colors.textTertiary}
                 />
               </View>
+              <View style={styles.divider} />
+              <View style={styles.infoRow}>
+                <View style={styles.optionLeft}>
+                  <View style={styles.optionIcon}>
+                    <Shield size={16} color={Colors.textTertiary} />
+                  </View>
+                  <View style={styles.infoTextBlock}>
+                    <Text style={styles.optionTitle}>Security note</Text>
+                    <Text style={styles.optionSubtitle}>Biometric lock protects app access, but it is not a replacement for backing up your device responsibly.</Text>
+                  </View>
+                </View>
+              </View>
             </View>
           </View>
         )}
+
+        <View style={styles.section}>
+          <Text style={styles.sectionLabel}>DATA AND VALUATION</Text>
+          <View style={styles.optionGroup}>
+            <View style={styles.infoRow}>
+              <View style={styles.optionLeft}>
+                <View style={styles.optionIcon}>
+                  <BarChart3 size={16} color={Colors.textTertiary} />
+                </View>
+                <View style={styles.infoTextBlock}>
+                  <Text style={styles.optionTitle}>Live gold rates</Text>
+                  <Text style={styles.optionSubtitle}>Valuation is based on current 24K spot pricing, with 22K, 18K, and 14K derived from purity factors.</Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.divider} />
+            <View style={styles.infoRow}>
+              <View style={styles.optionLeft}>
+                <View style={styles.optionIcon}>
+                  <Database size={16} color={Colors.textTertiary} />
+                </View>
+                <View style={styles.infoTextBlock}>
+                  <Text style={styles.optionTitle}>Fallback behavior</Text>
+                  <Text style={styles.optionSubtitle}>When live pricing is unavailable, SonaKeep falls back to cached or built-in estimates and labels that state clearly in the Rates screen.</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>ABOUT</Text>
@@ -182,7 +235,19 @@ export default function SettingsScreen() {
                 </View>
                 <View>
                   <Text style={styles.optionTitle}>Items Stored</Text>
-                  <Text style={styles.optionSubtitle}>{items.length} items</Text>
+                  <Text style={styles.optionSubtitle}>{items.length} items on this device</Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.divider} />
+            <View style={styles.infoRow}>
+              <View style={styles.optionLeft}>
+                <View style={styles.optionIcon}>
+                  <Mail size={16} color={Colors.textTertiary} />
+                </View>
+                <View style={styles.infoTextBlock}>
+                  <Text style={styles.optionTitle}>Support</Text>
+                  <Text style={styles.optionSubtitle}>Support details and privacy policy URLs will be added before public App Store submission.</Text>
                 </View>
               </View>
             </View>
@@ -242,6 +307,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
+    flex: 1,
+  },
+  infoTextBlock: {
+    flex: 1,
   },
   optionIcon: {
     width: 36,
@@ -265,6 +334,7 @@ const styles = StyleSheet.create({
     fontWeight: '500' as const,
     color: Colors.textSecondary,
     marginTop: 1,
+    lineHeight: 17,
   },
   radio: {
     width: 20,
@@ -289,6 +359,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 14,
+    gap: 12,
   },
   infoRow: {
     flexDirection: 'row',
