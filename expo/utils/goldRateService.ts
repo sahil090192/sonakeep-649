@@ -1,9 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GoldPurity } from '@/types/gold';
 import { PURITIES, GRAMS_PER_OUNCE } from '@/constants/goldData';
-
-const API_KEY = 'bff97029bd05c93bf41d432ae00f1932';
-const API_URL = `https://api.metalpriceapi.com/v1/latest?api_key=${API_KEY}&base=USD&currencies=XAU`;
+import { buildMetalPriceLatestUrl } from '@/config/runtime';
 
 const RATE_CACHE_KEY = 'sonakeep_gold_rate_cache_v2';
 
@@ -57,9 +55,15 @@ async function saveCache(store: RateCacheStore): Promise<void> {
 }
 
 async function fetchFromAPI(): Promise<{ pricePerOunceUSD: number } | null> {
+  const apiUrl = buildMetalPriceLatestUrl();
+  if (!apiUrl) {
+    console.warn('[GoldRateService] EXPO_PUBLIC_METAL_PRICE_API_KEY is not configured; skipping live rate fetch.');
+    return null;
+  }
+
   try {
     console.log('[GoldRateService] Fetching live gold rate from API...');
-    const response = await fetch(API_URL);
+    const response = await fetch(apiUrl);
     const data = await response.json();
     console.log('[GoldRateService] API response:', JSON.stringify(data));
 

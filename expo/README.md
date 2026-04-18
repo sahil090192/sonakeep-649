@@ -36,6 +36,21 @@ cd expo
 bun install
 ```
 
+### Configure environment variables
+
+Copy the example file and provide your Metalprice API key:
+
+```bash
+cp .env.example .env
+```
+
+Required variables:
+
+- `EXPO_PUBLIC_METAL_PRICE_API_KEY` — used for live gold rate fetching
+- `EXPO_PUBLIC_METAL_PRICE_API_URL` — optional endpoint override; defaults to Metalprice latest rates API
+
+If the API key is not configured, SonaKeep will skip live rate fetches and fall back to cached or built-in default values.
+
 ### Start the app
 
 ```bash
@@ -61,6 +76,7 @@ expo/
 ├── app/                    # Expo Router screens and layouts
 ├── assets/                 # App icons and static images
 ├── components/             # Reusable UI components
+├── config/                 # Runtime configuration helpers
 ├── constants/              # Design tokens and domain constants
 ├── contexts/               # App state providers
 ├── types/                  # Shared TypeScript types
