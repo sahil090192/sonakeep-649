@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { Plus, TrendingUp, TrendingDown, Weight, Layers, ShieldCheck, Gem, CircleDollarSign, RectangleHorizontal, Crown } from 'lucide-react-native';
+import { Plus, TrendingUp, TrendingDown, Weight, Layers, ShieldCheck, Gem, CircleDollarSign, RectangleHorizontal, Crown, LockKeyhole, Smartphone, BarChart3 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Colors from '@/constants/colors';
 import { useGold, useActiveItems } from '@/contexts/GoldContext';
@@ -110,7 +110,7 @@ export default function DashboardScreen() {
                 </Text>
               </View>
               <Text style={styles.changePeriod}>
-                {rateData?.lastUpdated ? 'daily' : 'no data'}
+                {rateData?.sourceLabel ?? 'awaiting rates'}
               </Text>
             </View>
           </View>
@@ -187,8 +187,33 @@ export default function DashboardScreen() {
               </View>
               <Text style={styles.emptyTitle}>Start Your Collection</Text>
               <Text style={styles.emptySubtitle}>
-                Add your first gold item to begin tracking your portfolio
+                Add your first gold item to begin tracking your portfolio, current value, and purity mix in one place.
               </Text>
+
+              <View style={styles.trustGrid}>
+                <View style={styles.trustCard}>
+                  <View style={styles.trustIconWrap}>
+                    <Smartphone size={18} color={Colors.gold} />
+                  </View>
+                  <Text style={styles.trustTitle}>Local first</Text>
+                  <Text style={styles.trustCopy}>Your holdings stay on this device unless you choose to move them later.</Text>
+                </View>
+                <View style={styles.trustCard}>
+                  <View style={styles.trustIconWrap}>
+                    <LockKeyhole size={18} color={Colors.gold} />
+                  </View>
+                  <Text style={styles.trustTitle}>Private by design</Text>
+                  <Text style={styles.trustCopy}>Use Privacy Mode and biometric lock to keep values away from casual eyes.</Text>
+                </View>
+                <View style={styles.trustCard}>
+                  <View style={styles.trustIconWrap}>
+                    <BarChart3 size={18} color={Colors.gold} />
+                  </View>
+                  <Text style={styles.trustTitle}>Live valuation</Text>
+                  <Text style={styles.trustCopy}>Gold prices refresh automatically and fall back gracefully when live data is unavailable.</Text>
+                </View>
+              </View>
+
               <TouchableOpacity style={styles.emptyButton} onPress={handleAddItem}>
                 <Plus size={18} color={Colors.white} />
                 <Text style={styles.emptyButtonText}>Add First Item</Text>
@@ -515,8 +540,42 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     textAlign: 'center',
     lineHeight: 20,
-    maxWidth: 260,
+    maxWidth: 300,
     marginBottom: 24,
+  },
+  trustGrid: {
+    width: '100%',
+    gap: 10,
+    marginBottom: 22,
+  },
+  trustCard: {
+    backgroundColor: Colors.card,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: Colors.cardBorder,
+    padding: 14,
+    width: '100%',
+  },
+  trustIconWrap: {
+    width: 34,
+    height: 34,
+    borderRadius: 10,
+    backgroundColor: Colors.goldSubtle,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+  },
+  trustTitle: {
+    fontSize: 14,
+    fontWeight: '800' as const,
+    color: Colors.textPrimary,
+    marginBottom: 4,
+  },
+  trustCopy: {
+    fontSize: 12,
+    fontWeight: '500' as const,
+    color: Colors.textSecondary,
+    lineHeight: 18,
   },
   emptyButton: {
     flexDirection: 'row',
