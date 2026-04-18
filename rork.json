@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "name": "Expo",
+      "name": "SonaKeep",
       "path": "expo",
       "framework": "react-native"
     }
