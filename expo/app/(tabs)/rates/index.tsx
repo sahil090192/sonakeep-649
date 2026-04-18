@@ -46,7 +46,7 @@ export default function RatesScreen() {
   const unitLabel = settings.weightUnit === 'grams' ? 'g' : 'oz';
 
   const formatLastUpdated = () => {
-    if (!rateData?.lastUpdated) return 'Not yet fetched';
+    if (!rateData?.lastUpdated) return 'No successful fetch yet';
     try {
       const d = new Date(rateData.lastUpdated);
       const now = new Date();
@@ -61,8 +61,16 @@ export default function RatesScreen() {
     }
   };
 
+  const getSourceTone = () => {
+    if (!rateData) return Colors.textTertiary;
+    if (rateData.source === 'live') return Colors.green;
+    if (rateData.source === 'cache') return Colors.textSecondary;
+    return Colors.red;
+  };
+
   const spotChange = getChangeForPurity('24K');
   const spotIsPositive = spotChange.change >= 0;
+  const sourceTone = getSourceTone();
 
   return (
     <Animated.View style={[styles.container, { paddingTop: insets.top, opacity: fadeAnim }]}>
@@ -71,13 +79,26 @@ export default function RatesScreen() {
         <View style={styles.lastUpdated}>
           <Clock size={12} color={Colors.textTertiary} />
           <Text style={styles.lastUpdatedText}>{formatLastUpdated()}</Text>
-          {rateData?.isLive ? (
+          {rateData?.source === 'live' ? (
             <Wifi size={12} color={Colors.green} />
           ) : rateData ? (
-            <WifiOff size={12} color={Colors.textTertiary} />
+            <WifiOff size={12} color={sourceTone} />
           ) : null}
           {ratesLoading && <ActivityIndicator size="small" color={Colors.gold} />}
         </View>
+
+        {rateData && (
+          <View style={styles.statusBanner}>
+            <Text style={[styles.statusBannerText, { color: sourceTone }]}>{rateData.sourceLabel}</Text>
+            <Text style={styles.statusBannerSubtext}>
+              {rateData.source === 'live'
+                ? 'Freshly fetched from the pricing API.'
+                : rateData.source === 'cache'
+                  ? 'Using the most recent saved price because a fresh fetch was not needed or was unavailable.'
+                  : 'Using a built-in estimate until a live or cached rate becomes available.'}
+            </Text>
+          </View>
+        )}
 
         <View style={styles.spotCard}>
           <View style={styles.spotAccent} />
@@ -99,7 +120,7 @@ export default function RatesScreen() {
           )}
           {spotChange.change === 0 && (
             <View style={styles.spotChangeRow}>
-              <Text style={styles.noChangeText}>Daily change available after 2 days of data</Text>
+              <Text style={styles.noChangeText}>Daily change becomes available after at least two stored rate points.</Text>
             </View>
           )}
 
@@ -159,7 +180,7 @@ export default function RatesScreen() {
 
         <View style={styles.disclaimer}>
           <Text style={styles.disclaimerText}>
-            Rates update once daily on first app open. Prices for 22K, 18K, and 14K are derived from the 24K spot price using purity factors.
+            Rates refresh at most once per day on app open. Purity-specific prices are derived from the 24K spot price using purity factors, and the app may temporarily fall back to cached or built-in values when live data is unavailable.
           </Text>
         </View>
       </ScrollView>
@@ -188,12 +209,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     marginTop: 6,
-    marginBottom: 24,
+    marginBottom: 12,
   },
   lastUpdatedText: {
     fontSize: 12,
     fontWeight: '500' as const,
     color: Colors.textTertiary,
+  },
+  statusBanner: {
+    backgroundColor: Colors.card,
+    borderRadius: 14,
+    padding: 14,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: Colors.cardBorder,
+  },
+  statusBannerText: {
+    fontSize: 13,
+    fontWeight: '800' as const,
+    letterSpacing: 0.2,
+  },
+  statusBannerSubtext: {
+    fontSize: 12,
+    fontWeight: '500' as const,
+    color: Colors.textSecondary,
+    marginTop: 4,
+    lineHeight: 18,
   },
   spotCard: {
     backgroundColor: Colors.card,

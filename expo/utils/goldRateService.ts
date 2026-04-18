@@ -4,6 +4,9 @@ import { PURITIES, GRAMS_PER_OUNCE } from '@/constants/goldData';
 import { buildMetalPriceLatestUrl } from '@/config/runtime';
 
 const RATE_CACHE_KEY = 'sonakeep_gold_rate_cache_v2';
+const FETCH_TIMEOUT_MS = 10000;
+
+type GoldRateSource = 'live' | 'cache' | 'fallback';
 
 export interface CachedGoldRate {
   date: string;
@@ -16,6 +19,11 @@ export interface CachedGoldRate {
 interface RateCacheStore {
   today: CachedGoldRate | null;
   yesterday: CachedGoldRate | null;
+}
+
+interface FetchResult {
+  pricePerOunceUSD: number;
+  fetchedAt: string;
 }
 
 function getTodayDateString(): string {
@@ -54,7 +62,46 @@ async function saveCache(store: RateCacheStore): Promise<void> {
   }
 }
 
-async function fetchFromAPI(): Promise<{ pricePerOunceUSD: number } | null> {
+function isReasonableSpotPrice(pricePerOunceUSD: number): boolean {
+  return Number.isFinite(pricePerOunceUSD) && pricePerOunceUSD > 1000 && pricePerOunceUSD < 10000;
+}
+
+function parsePricePerOunceUSD(data: unknown): number | null {
+  if (!data || typeof data !== 'object') {
+    return null;
+  }
+
+  const payload = data as { success?: unknown; rates?: Record<string, unknown> };
+  if (payload.success !== true || !payload.rates || typeof payload.rates !== 'object') {
+    return null;
+  }
+
+  const directRate = payload.rates.USDXAU;
+  if (typeof directRate === 'number' && isReasonableSpotPrice(directRate)) {
+    return directRate;
+  }
+
+  const inverseRate = payload.rates.XAU;
+  if (typeof inverseRate === 'number' && inverseRate > 0) {
+    const converted = 1 / inverseRate;
+    return isReasonableSpotPrice(converted) ? converted : null;
+  }
+
+  return null;
+}
+
+async function fetchWithTimeout(url: string): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
+  try {
+    return await fetch(url, { signal: controller.signal });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function fetchFromAPI(): Promise<FetchResult | null> {
   const apiUrl = buildMetalPriceLatestUrl();
   if (!apiUrl) {
     console.warn('[GoldRateService] EXPO_PUBLIC_METAL_PRICE_API_KEY is not configured; skipping live rate fetch.');
@@ -63,38 +110,42 @@ async function fetchFromAPI(): Promise<{ pricePerOunceUSD: number } | null> {
 
   try {
     console.log('[GoldRateService] Fetching live gold rate from API...');
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    console.log('[GoldRateService] API response:', JSON.stringify(data));
+    const response = await fetchWithTimeout(apiUrl);
 
-    if (data.success && data.rates) {
-      if (data.rates.USDXAU) {
-        return { pricePerOunceUSD: data.rates.USDXAU };
-      }
-      if (data.rates.XAU) {
-        return { pricePerOunceUSD: 1 / data.rates.XAU };
-      }
+    if (!response.ok) {
+      console.warn('[GoldRateService] API returned non-OK status:', response.status);
+      return null;
     }
-    console.warn('[GoldRateService] Unexpected API response structure');
-    return null;
+
+    const data = await response.json();
+    const pricePerOunceUSD = parsePricePerOunceUSD(data);
+    if (!pricePerOunceUSD) {
+      console.warn('[GoldRateService] Unexpected API response structure');
+      return null;
+    }
+
+    return {
+      pricePerOunceUSD,
+      fetchedAt: new Date().toISOString(),
+    };
   } catch (e) {
     console.error('[GoldRateService] API fetch failed:', e);
     return null;
   }
 }
 
-function buildCachedRate(pricePerOunceUSD: number, date: string): CachedGoldRate {
+function buildCachedRate(pricePerOunceUSD: number, date: string, fetchedAt = new Date().toISOString()): CachedGoldRate {
   const pricePerGramUSD_24K = pricePerOunceUSD / GRAMS_PER_OUNCE;
   return {
     date,
     pricePerOunceUSD,
     pricePerGramUSD_24K,
     rates: deriveAllPurityRates(pricePerGramUSD_24K),
-    fetchedAt: new Date().toISOString(),
+    fetchedAt,
   };
 }
 
-const FALLBACK_PRICE_PER_OUNCE = 5000.00;
+const FALLBACK_PRICE_PER_OUNCE = 5000.0;
 
 export interface GoldRateResult {
   rates: Record<GoldPurity, number>;
@@ -105,80 +156,59 @@ export interface GoldRateResult {
   dailyChangePercent: number;
   isLive: boolean;
   isFetching: boolean;
+  source: GoldRateSource;
+  sourceLabel: string;
+}
+
+function buildResult(current: CachedGoldRate, previous: CachedGoldRate | null, source: GoldRateSource): GoldRateResult {
+  const change = computeDailyChange(current, previous);
+  return {
+    rates: current.rates,
+    pricePerOunceUSD: current.pricePerOunceUSD,
+    pricePerGramUSD_24K: current.pricePerGramUSD_24K,
+    lastUpdated: current.fetchedAt,
+    dailyChange: change.change,
+    dailyChangePercent: change.percent,
+    isLive: source === 'live',
+    isFetching: false,
+    source,
+    sourceLabel: source === 'live' ? 'Live data' : source === 'cache' ? 'Cached data' : 'Fallback estimate',
+  };
 }
 
 export async function getGoldRates(): Promise<GoldRateResult> {
   const todayStr = getTodayDateString();
   const cache = await loadCache();
 
-  const isCacheValid = cache.today 
-    && cache.today.date === todayStr 
-    && cache.today.pricePerOunceUSD > 1000;
+  const isCacheValid = Boolean(
+    cache.today && cache.today.date === todayStr && isReasonableSpotPrice(cache.today.pricePerOunceUSD)
+  );
 
   if (isCacheValid && cache.today) {
     console.log('[GoldRateService] Using cached rate for today:', todayStr, `${cache.today.pricePerOunceUSD}/oz`);
-    const change = computeDailyChange(cache.today, cache.yesterday);
-    return {
-      rates: cache.today.rates,
-      pricePerOunceUSD: cache.today.pricePerOunceUSD,
-      pricePerGramUSD_24K: cache.today.pricePerGramUSD_24K,
-      lastUpdated: cache.today.fetchedAt,
-      dailyChange: change.change,
-      dailyChangePercent: change.percent,
-      isLive: true,
-      isFetching: false,
-    };
+    return buildResult(cache.today, cache.yesterday, 'cache');
   }
 
   const apiResult = await fetchFromAPI();
 
   if (apiResult) {
-    const newRate = buildCachedRate(apiResult.pricePerOunceUSD, todayStr);
+    const newRate = buildCachedRate(apiResult.pricePerOunceUSD, todayStr, apiResult.fetchedAt);
     const yesterday = cache.today && cache.today.date !== todayStr ? cache.today : cache.yesterday;
     const newCache: RateCacheStore = { today: newRate, yesterday };
     await saveCache(newCache);
 
-    const change = computeDailyChange(newRate, yesterday);
     console.log(`[GoldRateService] Live rate: $${newRate.pricePerGramUSD_24K.toFixed(2)}/g (24K)`);
-    return {
-      rates: newRate.rates,
-      pricePerOunceUSD: newRate.pricePerOunceUSD,
-      pricePerGramUSD_24K: newRate.pricePerGramUSD_24K,
-      lastUpdated: newRate.fetchedAt,
-      dailyChange: change.change,
-      dailyChangePercent: change.percent,
-      isLive: true,
-      isFetching: false,
-    };
+    return buildResult(newRate, yesterday, 'live');
   }
 
-  if (cache.today) {
+  if (cache.today && isReasonableSpotPrice(cache.today.pricePerOunceUSD)) {
     console.log('[GoldRateService] API failed, using last cached rate from:', cache.today.date);
-    const change = computeDailyChange(cache.today, cache.yesterday);
-    return {
-      rates: cache.today.rates,
-      pricePerOunceUSD: cache.today.pricePerOunceUSD,
-      pricePerGramUSD_24K: cache.today.pricePerGramUSD_24K,
-      lastUpdated: cache.today.fetchedAt,
-      dailyChange: change.change,
-      dailyChangePercent: change.percent,
-      isLive: false,
-      isFetching: false,
-    };
+    return buildResult(cache.today, cache.yesterday, 'cache');
   }
 
   console.log('[GoldRateService] No cache, no API. Using fallback rate.');
-  const fallback = buildCachedRate(FALLBACK_PRICE_PER_OUNCE, todayStr);
-  return {
-    rates: fallback.rates,
-    pricePerOunceUSD: fallback.pricePerOunceUSD,
-    pricePerGramUSD_24K: fallback.pricePerGramUSD_24K,
-    lastUpdated: '',
-    dailyChange: 0,
-    dailyChangePercent: 0,
-    isLive: false,
-    isFetching: false,
-  };
+  const fallback = buildCachedRate(FALLBACK_PRICE_PER_OUNCE, todayStr, '');
+  return buildResult(fallback, null, 'fallback');
 }
 
 function computeDailyChange(
