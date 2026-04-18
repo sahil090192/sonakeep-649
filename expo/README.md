@@ -128,6 +128,17 @@ bun run submit:ios:production
 4. Submit the production build to TestFlight
 5. After beta validation, submit the same lane through App Store Connect review
 
+## Privacy and permission footprint
+
+Current v1 behavior is intentionally narrow:
+
+- user-entered holdings and settings are stored locally on-device
+- the app performs external network requests only for public gold-rate fetching
+- the app does not require account creation, analytics, ad tracking, photo library access, or location access
+- the app currently relies on biometric/device authentication only when the user enables app lock
+
+A draft App Store privacy disclosure note lives in `../docs/privacy-disclosure-draft.md`.
+
 ## Project structure
 
 ```text
