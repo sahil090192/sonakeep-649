@@ -84,6 +84,7 @@ export default function HoldingsScreen() {
         style={styles.itemCard}
         onPress={() => router.push(`/item-detail?id=${item.id}`)}
         activeOpacity={0.7}
+        testID={`holding-card-${item.id}`}
       >
         <View style={styles.itemIcon}>
           {IconComp && <IconComp size={20} color={Colors.gold} />}
@@ -118,6 +119,7 @@ export default function HoldingsScreen() {
             if (Platform.OS !== 'web') Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
             router.push('/add-item');
           }}
+          testID="holdings-add-button"
         >
           <Plus size={20} color={Colors.white} />
         </TouchableOpacity>
@@ -132,9 +134,10 @@ export default function HoldingsScreen() {
             placeholderTextColor={Colors.textTertiary}
             value={search}
             onChangeText={setSearch}
+            testID="holdings-search-input"
           />
           {search.length > 0 && (
-            <TouchableOpacity onPress={() => setSearch('')}>
+            <TouchableOpacity onPress={() => setSearch('')} testID="holdings-search-clear-button">
               <X size={16} color={Colors.textTertiary} />
             </TouchableOpacity>
           )}
@@ -142,19 +145,21 @@ export default function HoldingsScreen() {
         <TouchableOpacity
           style={[styles.filterBtn, showFilters && styles.filterBtnActive]}
           onPress={() => setShowFilters(!showFilters)}
+          testID="holdings-filter-toggle"
         >
           <SlidersHorizontal size={18} color={showFilters ? Colors.white : Colors.gold} />
         </TouchableOpacity>
       </View>
 
       {showFilters && (
-        <View style={styles.filtersSection}>
+        <View style={styles.filtersSection} testID="holdings-filters-panel">
           <View style={styles.filterRow}>
             <Text style={styles.filterLabel}>CATEGORY</Text>
             <View style={styles.chipRow}>
               <TouchableOpacity
                 style={[styles.chip, !selectedCategory && styles.chipActive]}
                 onPress={() => setSelectedCategory(null)}
+                testID="holdings-category-all"
               >
                 <Text style={[styles.chipText, !selectedCategory && styles.chipTextActive]}>All</Text>
               </TouchableOpacity>
@@ -163,6 +168,7 @@ export default function HoldingsScreen() {
                   key={cat.value}
                   style={[styles.chip, selectedCategory === cat.value && styles.chipActive]}
                   onPress={() => setSelectedCategory(selectedCategory === cat.value ? null : cat.value)}
+                  testID={`holdings-category-${cat.value}`}
                 >
                   <Text style={[styles.chipText, selectedCategory === cat.value && styles.chipTextActive]}>
                     {cat.label}
@@ -179,6 +185,7 @@ export default function HoldingsScreen() {
                   key={s.value}
                   style={[styles.chip, sortBy === s.value && styles.chipActive]}
                   onPress={() => setSortBy(s.value)}
+                  testID={`holdings-sort-${s.value}`}
                 >
                   <Text style={[styles.chipText, sortBy === s.value && styles.chipTextActive]}>
                     {s.label}
@@ -201,7 +208,7 @@ export default function HoldingsScreen() {
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
-          <View style={styles.empty}>
+          <View style={styles.empty} testID="holdings-empty-state">
             <Gem size={36} color={Colors.textTertiary} />
             <Text style={styles.emptyText}>No items found</Text>
           </View>
