@@ -69,6 +69,65 @@ bun run start-web
 bun run lint
 ```
 
+## EAS build and release workflow
+
+SonaKeep uses `expo/eas.json` to define three iOS-oriented build profiles:
+
+- `development` — internal development client build
+- `preview` — internal distribution build suitable for device testing before TestFlight
+- `production` — App Store / TestFlight-ready release build with remote version auto-increment
+
+### Authenticate with Expo / EAS
+
+```bash
+bunx eas-cli login
+bunx eas-cli whoami
+```
+
+### Configure build credentials
+
+Run this once per app/account if the project has not been connected to EAS before:
+
+```bash
+bunx eas-cli build:configure
+```
+
+### Set EAS secrets for build-time environment variables
+
+At minimum, configure the Metalprice API key in EAS so cloud builds can fetch live gold rates:
+
+```bash
+bunx eas-cli secret:create --scope project --name EXPO_PUBLIC_METAL_PRICE_API_KEY --value <your_api_key>
+```
+
+If you intentionally need a non-default endpoint, also configure:
+
+```bash
+bunx eas-cli secret:create --scope project --name EXPO_PUBLIC_METAL_PRICE_API_URL --value https://api.metalpriceapi.com/v1/latest
+```
+
+### Build commands
+
+```bash
+bun run build:ios:development
+bun run build:ios:preview
+bun run build:ios:production
+```
+
+### Submit production build to TestFlight / App Store Connect
+
+```bash
+bun run submit:ios:production
+```
+
+### Intended release flow
+
+1. Create a `preview` build for internal device validation
+2. Verify installability and core flows outside Expo Go
+3. Create a `production` build once release candidate quality is reached
+4. Submit the production build to TestFlight
+5. After beta validation, submit the same lane through App Store Connect review
+
 ## Project structure
 
 ```text
@@ -82,6 +141,7 @@ expo/
 ├── types/                  # Shared TypeScript types
 ├── utils/                  # Calculations and service helpers
 ├── app.json                # Expo app configuration
+├── eas.json                # EAS build and submit profiles
 └── package.json            # Dependencies and scripts
 ```
 
