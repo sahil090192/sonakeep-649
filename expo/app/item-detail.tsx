@@ -83,7 +83,7 @@ export default function ItemDetailScreen() {
     return (
       <View style={[styles.container, { paddingTop: insets.top }]}>
         <View style={styles.headerBar}>
-          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} testID="item-detail-back-button">
             <ArrowLeft size={20} color={Colors.textPrimary} />
           </TouchableOpacity>
         </View>
@@ -159,25 +159,25 @@ export default function ItemDetailScreen() {
   return (
     <Animated.View style={[styles.container, { paddingTop: insets.top, opacity: fadeAnim }]}>
       <View style={styles.headerBar}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} testID="item-detail-back-button">
           <ArrowLeft size={20} color={Colors.textPrimary} />
         </TouchableOpacity>
         <View style={styles.headerActions}>
           {isEditing ? (
             <>
-              <TouchableOpacity style={styles.actionBtn} onPress={() => setIsEditing(false)}>
+              <TouchableOpacity style={styles.actionBtn} onPress={() => setIsEditing(false)} testID="item-detail-cancel-edit-button">
                 <X size={18} color={Colors.textSecondary} />
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.actionBtn, styles.saveBtn]} onPress={handleSaveEdit}>
+              <TouchableOpacity style={[styles.actionBtn, styles.saveBtn]} onPress={handleSaveEdit} testID="item-detail-save-edit-button">
                 <Check size={18} color={Colors.white} />
               </TouchableOpacity>
             </>
           ) : (
             <>
-              <TouchableOpacity style={styles.actionBtn} onPress={() => setIsEditing(true)}>
+              <TouchableOpacity style={styles.actionBtn} onPress={() => setIsEditing(true)} testID="item-detail-edit-button">
                 <Pencil size={18} color={Colors.gold} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.actionBtn} onPress={handleDelete}>
+              <TouchableOpacity style={styles.actionBtn} onPress={handleDelete} testID="item-detail-delete-button">
                 <Trash2 size={18} color={Colors.red} />
               </TouchableOpacity>
             </>
@@ -196,6 +196,7 @@ export default function ItemDetailScreen() {
               value={editName}
               onChangeText={setEditName}
               autoFocus
+              testID="item-detail-name-input"
             />
           ) : (
             <Text style={styles.heroName}>{item.name}</Text>
@@ -244,6 +245,7 @@ export default function ItemDetailScreen() {
                   value={editWeight}
                   onChangeText={setEditWeight}
                   keyboardType="decimal-pad"
+                  testID="item-detail-weight-input"
                 />
               </View>
               <View style={styles.editRow}>
@@ -253,6 +255,7 @@ export default function ItemDetailScreen() {
                   value={editPurchasePrice}
                   onChangeText={setEditPurchasePrice}
                   keyboardType="decimal-pad"
+                  testID="item-detail-purchase-price-input"
                 />
               </View>
               <View style={styles.editRow}>
@@ -261,6 +264,7 @@ export default function ItemDetailScreen() {
                   style={styles.editInput}
                   value={editLocation}
                   onChangeText={setEditLocation}
+                  testID="item-detail-location-input"
                 />
               </View>
               <View style={styles.editRow}>
@@ -270,6 +274,7 @@ export default function ItemDetailScreen() {
                   value={editNotes}
                   onChangeText={setEditNotes}
                   multiline
+                  testID="item-detail-notes-input"
                 />
               </View>
             </View>
@@ -286,7 +291,7 @@ export default function ItemDetailScreen() {
         </View>
 
         {!isEditing && item.status === 'active' && (
-          <TouchableOpacity style={styles.soldBtn} onPress={handleMarkSold}>
+          <TouchableOpacity style={styles.soldBtn} onPress={handleMarkSold} testID="item-detail-mark-sold-button">
             <Text style={styles.soldBtnText}>Mark as Sold</Text>
           </TouchableOpacity>
         )}

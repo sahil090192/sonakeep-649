@@ -64,6 +64,7 @@ export default function SettingsScreen() {
                 key={c.value}
                 style={[styles.optionRow, settings.currency === c.value && styles.optionRowActive]}
                 onPress={() => handleCurrencyChange(c.value)}
+                testID={`settings-currency-${c.value}`}
               >
                 <View style={styles.optionLeft}>
                   <View style={[styles.optionIcon, settings.currency === c.value && styles.optionIconActive]}>
@@ -90,6 +91,7 @@ export default function SettingsScreen() {
                 key={u.value}
                 style={[styles.optionRow, settings.weightUnit === u.value && styles.optionRowActive]}
                 onPress={() => handleWeightChange(u.value)}
+                testID={`settings-weight-unit-${u.value}`}
               >
                 <View style={styles.optionLeft}>
                   <View style={[styles.optionIcon, settings.weightUnit === u.value && styles.optionIconActive]}>
@@ -130,6 +132,7 @@ export default function SettingsScreen() {
                 onValueChange={togglePrivacy}
                 trackColor={{ false: Colors.cardBorder, true: Colors.goldLight }}
                 thumbColor={settings.privacyMode ? Colors.gold : Colors.textTertiary}
+                testID="settings-privacy-toggle"
               />
             </View>
             <View style={styles.divider} />
@@ -166,6 +169,7 @@ export default function SettingsScreen() {
                   onValueChange={handleBiometricToggle}
                   trackColor={{ false: Colors.cardBorder, true: Colors.goldLight }}
                   thumbColor={biometricEnabled ? Colors.gold : Colors.textTertiary}
+                  testID="settings-biometric-toggle"
                 />
               </View>
               <View style={styles.divider} />
