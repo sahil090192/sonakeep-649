@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
   Alert,
   Animated,
 } from 'react-native';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { X, ChevronDown, Calendar, MapPin, FileText, Gem, CircleDollarSign, RectangleHorizontal, Crown, Check } from 'lucide-react-native';
@@ -27,6 +28,22 @@ const CATEGORY_ICONS: Record<string, React.ComponentType<{ size: number; color: 
   crown: Crown,
 };
 
+function formatDateForStorage(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function formatDateForDisplay(date: Date | null): string {
+  if (!date) return 'Select a date';
+  return date.toLocaleDateString([], {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
+
 export default function AddItemScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -37,12 +54,15 @@ export default function AddItemScreen() {
   const [weight, setWeight] = useState('');
   const [purity, setPurity] = useState<GoldPurity>('22K');
   const [purchasePrice, setPurchasePrice] = useState('');
-  const [purchaseDate, setPurchaseDate] = useState('');
+  const [purchaseDate, setPurchaseDate] = useState<Date | null>(null);
   const [location, setLocation] = useState('');
   const [notes, setNotes] = useState('');
   const [showPurityPicker, setShowPurityPicker] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  const defaultDateValue = useMemo(() => purchaseDate ?? new Date(), [purchaseDate]);
 
   const handleSave = () => {
     if (!name.trim()) {
@@ -56,6 +76,8 @@ export default function AddItemScreen() {
 
     if (Platform.OS !== 'web') Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
+    const resolvedPurchaseDate = purchaseDate ?? new Date();
+
     const itemData: Omit<GoldItem, 'id' | 'createdAt' | 'updatedAt'> = {
       name: name.trim(),
       category,
@@ -63,7 +85,7 @@ export default function AddItemScreen() {
       weightUnit: settings.weightUnit,
       purity,
       purchasePrice: purchasePrice ? Number(purchasePrice) : 0,
-      purchaseDate: purchaseDate || new Date().toISOString().split('T')[0],
+      purchaseDate: formatDateForStorage(resolvedPurchaseDate),
       location: location.trim(),
       photos: [],
       notes: notes.trim(),
@@ -81,6 +103,27 @@ export default function AddItemScreen() {
 
   const handlePressOut = () => {
     Animated.spring(scaleAnim, { toValue: 1, useNativeDriver: true }).start();
+  };
+
+  const handleDatePress = () => {
+    if (Platform.OS !== 'web' && Platform.OS !== 'android') {
+      Haptics.selectionAsync();
+    }
+    setShowDatePicker(true);
+  };
+
+  const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    if (Platform.OS === 'android') {
+      setShowDatePicker(false);
+    }
+
+    if (event.type === 'dismissed') {
+      return;
+    }
+
+    if (selectedDate) {
+      setPurchaseDate(selectedDate);
+    }
   };
 
   const currencySymbol = CURRENCIES.find((c) => c.value === settings.currency)?.symbol ?? '$';
@@ -202,16 +245,69 @@ export default function AddItemScreen() {
 
           <View style={styles.section}>
             <Text style={styles.label}>PURCHASE DATE</Text>
-            <View style={styles.inputWithIcon}>
-              <Calendar size={16} color={Colors.textTertiary} />
+            <TouchableOpacity
+              style={styles.dateTrigger}
+              onPress={handleDatePress}
+              activeOpacity={0.8}
+              testID="item-date-picker-button"
+            >
+              <View style={styles.dateTriggerLeft}>
+                <View style={styles.dateIconWrap}>
+                  <Calendar size={16} color={Colors.gold} />
+                </View>
+                <View>
+                  <Text style={styles.dateTriggerText}>{formatDateForDisplay(purchaseDate)}</Text>
+                  <Text style={styles.dateTriggerHint}>Tap to choose from a calendar</Text>
+                </View>
+              </View>
+              <ChevronDown size={16} color={Colors.textSecondary} />
+            </TouchableOpacity>
+
+            {showDatePicker && Platform.OS === 'ios' && (
+              <View style={styles.datePickerCard}>
+                <View style={styles.datePickerHeader}>
+                  <Text style={styles.datePickerTitle}>Choose purchase date</Text>
+                  <TouchableOpacity
+                    style={styles.datePickerDoneButton}
+                    onPress={() => setShowDatePicker(false)}
+                  >
+                    <Text style={styles.datePickerDoneText}>Done</Text>
+                  </TouchableOpacity>
+                </View>
+                <DateTimePicker
+                  value={defaultDateValue}
+                  mode="date"
+                  display="inline"
+                  onChange={handleDateChange}
+                  maximumDate={new Date()}
+                />
+              </View>
+            )}
+
+            {showDatePicker && Platform.OS === 'android' && (
+              <DateTimePicker
+                value={defaultDateValue}
+                mode="date"
+                display="default"
+                onChange={handleDateChange}
+                maximumDate={new Date()}
+              />
+            )}
+
+            {Platform.OS === 'web' && (
               <TextInput
-                style={styles.inputInner}
+                style={[styles.input, styles.webDateInput]}
                 placeholder="YYYY-MM-DD"
                 placeholderTextColor={Colors.textTertiary}
-                value={purchaseDate}
-                onChangeText={setPurchaseDate}
+                value={purchaseDate ? formatDateForStorage(purchaseDate) : ''}
+                onChangeText={(value) => {
+                  const parsed = new Date(value);
+                  if (!Number.isNaN(parsed.getTime())) {
+                    setPurchaseDate(parsed);
+                  }
+                }}
               />
-            </View>
+            )}
           </View>
 
           <View style={styles.section}>
@@ -417,6 +513,77 @@ const styles = StyleSheet.create({
   purityOptionTextActive: {
     color: Colors.gold,
     fontWeight: '800' as const,
+  },
+  dateTrigger: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: Colors.card,
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    borderWidth: 1,
+    borderColor: Colors.cardBorder,
+  },
+  dateTriggerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    flex: 1,
+  },
+  dateIconWrap: {
+    width: 34,
+    height: 34,
+    borderRadius: 10,
+    backgroundColor: Colors.goldSubtle,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dateTriggerText: {
+    fontSize: 15,
+    fontWeight: '700' as const,
+    color: Colors.textPrimary,
+  },
+  dateTriggerHint: {
+    fontSize: 12,
+    fontWeight: '500' as const,
+    color: Colors.textSecondary,
+    marginTop: 2,
+  },
+  datePickerCard: {
+    marginTop: 10,
+    backgroundColor: Colors.card,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: Colors.cardBorder,
+    overflow: 'hidden',
+  },
+  datePickerHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 14,
+    paddingTop: 14,
+  },
+  datePickerTitle: {
+    fontSize: 13,
+    fontWeight: '800' as const,
+    color: Colors.textPrimary,
+    letterSpacing: 0.2,
+  },
+  datePickerDoneButton: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 10,
+    backgroundColor: Colors.goldSubtle,
+  },
+  datePickerDoneText: {
+    fontSize: 12,
+    fontWeight: '800' as const,
+    color: Colors.gold,
+  },
+  webDateInput: {
+    marginTop: 10,
   },
   saveButton: {
     backgroundColor: Colors.gold,
