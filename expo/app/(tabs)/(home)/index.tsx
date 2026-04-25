@@ -9,14 +9,15 @@ import {
   RefreshControl,
   Platform,
 } from 'react-native';
+import Svg, { Circle } from 'react-native-svg';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { Plus, TrendingUp, TrendingDown, Weight, Layers, ShieldCheck, Gem, CircleDollarSign, RectangleHorizontal, Crown, LockKeyhole, Smartphone, BarChart3 } from 'lucide-react-native';
+import { Plus, TrendingUp, TrendingDown, Weight, Layers, ChartNoAxesCombined, Gem, CircleDollarSign, RectangleHorizontal, Crown, LockKeyhole, Smartphone, BarChart3 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Colors from '@/constants/colors';
 import { useGold, useActiveItems } from '@/contexts/GoldContext';
 import { formatCurrency, formatWeight, getItemCurrentValue, getItemDailyChange } from '@/utils/calculations';
-import { CATEGORIES } from '@/constants/goldData';
+import { CATEGORIES, CURRENCY_RATES } from '@/constants/goldData';
 import { GoldItem } from '@/types/gold';
 
 const CATEGORY_ICONS: Record<string, React.ComponentType<{ size: number; color: string }>> = {
@@ -26,10 +27,17 @@ const CATEGORY_ICONS: Record<string, React.ComponentType<{ size: number; color: 
   crown: Crown,
 };
 
+const CATEGORY_COLORS: Record<string, string> = {
+  jewelry: Colors.gold,
+  coin: Colors.textPrimary,
+  bar: Colors.textTertiary,
+  heirloom: Colors.goldDark,
+};
+
 export default function DashboardScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { portfolio, settings, rateData } = useGold();
+  const { portfolio, settings, rateData, liveRates } = useGold();
   const activeItems = useActiveItems();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
@@ -65,6 +73,26 @@ export default function DashboardScreen() {
   const getCategoryCount = (category: string) =>
     activeItems.filter((i) => i.category === category).length;
 
+  const totalPurchaseBasis = activeItems.reduce((sum, item) => sum + (item.purchasePrice || 0), 0);
+  const totalGainLoss = portfolio.totalValue - totalPurchaseBasis;
+  const gainLossIsPositive = totalGainLoss >= 0;
+  const hasCostBasis = totalPurchaseBasis > 0;
+  const ratePerGram24K = rateData
+    ? rateData.pricePerGramUSD_24K * CURRENCY_RATES[settings.currency]
+    : null;
+  const categoryMix = CATEGORIES.map((cat) => {
+    const amount = activeItems
+      .filter((item) => item.category === cat.value)
+      .reduce((sum, item) => sum + getItemCurrentValue(item, settings.currency, liveRates), 0);
+    return {
+      category: cat.value,
+      label: cat.value === 'bar' ? 'Bullion' : cat.label,
+      amount,
+      count: getCategoryCount(cat.value),
+      color: CATEGORY_COLORS[cat.value],
+    };
+  }).filter((cat) => cat.amount > 0 || cat.count > 0);
+
   const recentItems = activeItems.slice(0, 3);
 
   return (
@@ -79,8 +107,8 @@ export default function DashboardScreen() {
         <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
           <View style={styles.header}>
             <View>
-              <Text style={styles.greeting}>SONAKEEP</Text>
-              <Text style={styles.subtitle}>Your Gold Portfolio</Text>
+              <Text style={styles.subtitle}>Local-first gold keeping</Text>
+              <Text style={styles.greeting}>SonaKeep</Text>
             </View>
             <TouchableOpacity
               style={styles.addButton}
@@ -118,7 +146,7 @@ export default function DashboardScreen() {
           <View style={styles.metricsRow}>
             <View style={styles.metricCard}>
               <View style={styles.metricIconWrap}>
-                <Weight size={16} color={Colors.gold} />
+                <Weight size={14} color={Colors.gold} />
               </View>
               <Text style={styles.metricValue}>
                 {settings.privacyMode ? '••' : formatWeight(portfolio.totalWeight, settings.weightUnit)}
@@ -127,38 +155,43 @@ export default function DashboardScreen() {
             </View>
             <View style={styles.metricCard}>
               <View style={styles.metricIconWrap}>
-                <Layers size={16} color={Colors.gold} />
+                <Layers size={14} color={Colors.gold} />
               </View>
               <Text style={styles.metricValue}>{portfolio.itemCount}</Text>
               <Text style={styles.metricLabel}>ITEMS</Text>
             </View>
             <View style={styles.metricCard}>
               <View style={styles.metricIconWrap}>
-                <ShieldCheck size={16} color={Colors.gold} />
+                <ChartNoAxesCombined size={14} color={Colors.gold} />
               </View>
-              <Text style={styles.metricValue}>{portfolio.averagePurity}</Text>
-              <Text style={styles.metricLabel}>PURITY</Text>
+              <Text
+                style={[styles.metricValue, styles.metricValueCompact, !gainLossIsPositive && styles.metricValueLoss]}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.7}
+              >
+                {settings.privacyMode ? '••' : hasCostBasis ? `${gainLossIsPositive ? '+' : '-'}${formatCurrency(Math.abs(totalGainLoss), settings.currency)}` : '--'}
+              </Text>
+              <Text style={styles.metricLabel}>GAIN / LOSS</Text>
             </View>
           </View>
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>BY CATEGORY</Text>
-            <View style={styles.categoryGrid}>
-              {CATEGORIES.map((cat) => {
-                const IconComp = CATEGORY_ICONS[cat.icon];
-                const count = getCategoryCount(cat.value);
-                return (
-                  <View key={cat.value} style={styles.categoryCard}>
-                    <View style={styles.categoryIconWrap}>
-                      {IconComp && <IconComp size={18} color={Colors.gold} />}
-                    </View>
-                    <Text style={styles.categoryName}>{cat.label}</Text>
-                    <Text style={styles.categoryCount}>{count} {count === 1 ? 'item' : 'items'}</Text>
-                  </View>
-                );
-              })}
+          {(activeItems.length > 0 || ratePerGram24K !== null) && (
+            <View style={styles.insightRow}>
+              {activeItems.length > 0 && (
+                <AssetMixChart
+                  categoryMix={categoryMix}
+                  totalValue={portfolio.totalValue}
+                />
+              )}
+              <GoldRateMiniCard
+                ratePerGram24K={ratePerGram24K}
+                sourceLabel={rateData?.sourceLabel}
+                currency={settings.currency}
+                privacyMode={settings.privacyMode}
+              />
             </View>
-          </View>
+          )}
 
           {recentItems.length > 0 && (
             <View style={styles.section}>
@@ -226,6 +259,110 @@ export default function DashboardScreen() {
   );
 }
 
+function AssetMixChart({
+  categoryMix,
+  totalValue,
+}: {
+  categoryMix: { category: string; label: string; amount: number; count: number; color: string }[];
+  totalValue: number;
+}) {
+  const size = 82;
+  const strokeWidth = 5;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  let accumulated = 0;
+
+  return (
+    <View style={styles.insightCard}>
+      <Text style={styles.insightTitle}>ASSET MIX</Text>
+      <Text style={styles.insightSubtitle}>By type</Text>
+
+      <View style={styles.assetMixBody}>
+        <View style={styles.chartWrap}>
+          <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+            <Circle
+              cx={size / 2}
+              cy={size / 2}
+              r={radius}
+              stroke={Colors.cardBorder}
+              strokeWidth={strokeWidth}
+              fill="none"
+            />
+            {categoryMix.map((cat) => {
+              const portion = totalValue > 0 ? cat.amount / totalValue : 0;
+              const dash = Math.max(portion * circumference - 2, 0);
+              const gap = circumference - dash;
+              const offset = -accumulated * circumference;
+              accumulated += portion;
+
+              return (
+                <Circle
+                  key={cat.category}
+                  cx={size / 2}
+                  cy={size / 2}
+                  r={radius}
+                  stroke={cat.color}
+                  strokeWidth={strokeWidth}
+                  strokeDasharray={`${dash} ${gap}`}
+                  strokeDashoffset={offset}
+                  strokeLinecap="round"
+                  fill="none"
+                  rotation="-90"
+                  originX={size / 2}
+                  originY={size / 2}
+                />
+              );
+            })}
+          </Svg>
+        </View>
+
+        <View style={styles.mixLegend}>
+          {categoryMix.map((cat) => {
+            const percent = totalValue > 0 ? (cat.amount / totalValue) * 100 : 0;
+            return (
+              <View key={cat.category} style={styles.mixLegendRow}>
+                <View style={[styles.mixLegendDot, { backgroundColor: cat.color }]} />
+                <Text style={styles.mixLegendLabel}>{cat.label}</Text>
+                <Text style={styles.mixLegendValue}>{percent.toFixed(0)}%</Text>
+              </View>
+            );
+          })}
+        </View>
+      </View>
+    </View>
+  );
+}
+
+function GoldRateMiniCard({
+  ratePerGram24K,
+  sourceLabel,
+  currency,
+  privacyMode,
+}: {
+  ratePerGram24K: number | null;
+  sourceLabel?: string;
+  currency: import('@/types/gold').Currency;
+  privacyMode: boolean;
+}) {
+  return (
+    <View style={styles.insightCard}>
+      <Text style={styles.insightTitle}>24K GOLD</Text>
+      <Text style={styles.insightSubtitle}>Price per gram</Text>
+      <View style={styles.rateMiniBody}>
+        <Text
+          style={styles.rateMiniValue}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.72}
+        >
+          {privacyMode ? '••••' : ratePerGram24K === null ? '--' : formatCurrency(ratePerGram24K, currency)}
+        </Text>
+        <Text style={styles.rateMiniSource}>{sourceLabel ?? 'Awaiting rate'}</Text>
+      </View>
+    </View>
+  );
+}
+
 function RecentItemRow({
   item,
   currency,
@@ -284,28 +421,30 @@ const styles = StyleSheet.create({
     marginBottom: 28,
   },
   greeting: {
-    fontSize: 26,
-    fontWeight: '900' as const,
+    fontFamily: Colors.fontDisplay,
+    fontSize: 42,
+    fontWeight: '500' as const,
     color: Colors.textPrimary,
-    letterSpacing: 2.5,
+    letterSpacing: 0,
   },
   subtitle: {
-    fontSize: 13,
+    fontSize: 11,
     fontWeight: '500' as const,
-    color: Colors.textSecondary,
-    marginTop: 3,
-    letterSpacing: 0.3,
+    color: Colors.gold,
+    marginBottom: 2,
+    letterSpacing: 1.9,
+    textTransform: 'uppercase' as const,
   },
   addButton: {
     width: 44,
     height: 44,
-    borderRadius: 14,
+    borderRadius: Colors.radiusMd,
     backgroundColor: Colors.gold,
     alignItems: 'center',
     justifyContent: 'center',
   },
   portfolioCard: {
-    borderRadius: 20,
+    borderRadius: Colors.radiusLg,
     overflow: 'hidden',
     marginBottom: 16,
     backgroundColor: Colors.card,
@@ -324,16 +463,17 @@ const styles = StyleSheet.create({
   },
   portfolioLabel: {
     fontSize: 11,
-    fontWeight: '800' as const,
+    fontWeight: '500' as const,
     color: Colors.textTertiary,
-    letterSpacing: 1.5,
+    letterSpacing: 1.9,
   },
   portfolioValue: {
-    fontSize: 34,
-    fontWeight: '900' as const,
+    fontFamily: Colors.fontDisplay,
+    fontSize: 44,
+    fontWeight: '500' as const,
     color: Colors.textPrimary,
     marginTop: 8,
-    letterSpacing: -1,
+    letterSpacing: 0,
   },
   changeRow: {
     flexDirection: 'row',
@@ -346,7 +486,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 10,
     paddingVertical: 5,
-    borderRadius: 20,
+    borderRadius: Colors.radiusMd,
     gap: 4,
   },
   changeBadgeGreen: {
@@ -373,38 +513,50 @@ const styles = StyleSheet.create({
   },
   metricsRow: {
     flexDirection: 'row',
-    gap: 10,
-    marginBottom: 28,
+    gap: 8,
+    marginBottom: 22,
   },
   metricCard: {
     flex: 1,
     backgroundColor: Colors.card,
-    borderRadius: 16,
-    padding: 14,
+    borderRadius: Colors.radiusLg,
+    minHeight: 112,
+    paddingHorizontal: 12,
+    paddingVertical: 14,
     borderWidth: 1,
     borderColor: Colors.cardBorder,
+    justifyContent: 'space-between',
   },
   metricIconWrap: {
-    width: 32,
-    height: 32,
-    borderRadius: 10,
+    width: 28,
+    height: 28,
+    borderRadius: Colors.radiusMd,
     backgroundColor: Colors.goldSubtle,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 10,
+    marginBottom: 12,
   },
   metricValue: {
-    fontSize: 17,
-    fontWeight: '900' as const,
+    fontFamily: Colors.fontDisplay,
+    fontSize: 18,
+    fontWeight: '500' as const,
     color: Colors.textPrimary,
     letterSpacing: -0.3,
+    lineHeight: 22,
+  },
+  metricValueCompact: {
+    fontSize: 16,
+    lineHeight: 20,
+  },
+  metricValueLoss: {
+    color: Colors.red,
   },
   metricLabel: {
-    fontSize: 10,
-    fontWeight: '700' as const,
+    fontSize: 9,
+    fontWeight: '500' as const,
     color: Colors.textTertiary,
-    marginTop: 3,
-    letterSpacing: 1,
+    marginTop: 5,
+    letterSpacing: 1.3,
   },
   section: {
     marginBottom: 28,
@@ -417,10 +569,90 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 12,
-    fontWeight: '800' as const,
+    fontWeight: '500' as const,
     color: Colors.textSecondary,
     marginBottom: 14,
     letterSpacing: 1.5,
+  },
+  insightRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 26,
+  },
+  insightCard: {
+    flex: 1,
+    minHeight: 184,
+    backgroundColor: Colors.card,
+    borderRadius: Colors.radiusLg,
+    borderWidth: 1,
+    borderColor: Colors.cardBorder,
+    padding: 12,
+  },
+  insightTitle: {
+    fontSize: 10,
+    fontWeight: '500' as const,
+    color: Colors.textSecondary,
+    letterSpacing: 1.5,
+  },
+  insightSubtitle: {
+    fontSize: 11,
+    fontWeight: '500' as const,
+    color: Colors.textTertiary,
+    marginTop: 2,
+  },
+  assetMixBody: {
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flex: 1,
+    paddingTop: 10,
+  },
+  chartWrap: {
+    width: 82,
+    height: 82,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  mixLegend: {
+    width: '100%',
+    gap: 5,
+  },
+  mixLegendRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  mixLegendDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  mixLegendLabel: {
+    flex: 1,
+    fontSize: 11,
+    fontWeight: '500' as const,
+    color: Colors.textSecondary,
+  },
+  mixLegendValue: {
+    fontSize: 11,
+    fontWeight: '600' as const,
+    color: Colors.textPrimary,
+  },
+  rateMiniBody: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  rateMiniValue: {
+    fontFamily: Colors.fontDisplay,
+    fontSize: 32,
+    fontWeight: '500' as const,
+    color: Colors.textPrimary,
+    lineHeight: 36,
+  },
+  rateMiniSource: {
+    fontSize: 11,
+    fontWeight: '500' as const,
+    color: Colors.textTertiary,
+    marginTop: 10,
   },
   seeAll: {
     fontSize: 13,
@@ -436,7 +668,7 @@ const styles = StyleSheet.create({
   categoryCard: {
     width: '48%' as any,
     backgroundColor: Colors.card,
-    borderRadius: 14,
+    borderRadius: Colors.radiusLg,
     padding: 14,
     borderWidth: 1,
     borderColor: Colors.cardBorder,
@@ -446,15 +678,16 @@ const styles = StyleSheet.create({
   categoryIconWrap: {
     width: 36,
     height: 36,
-    borderRadius: 10,
+    borderRadius: Colors.radiusMd,
     backgroundColor: Colors.goldSubtle,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 10,
   },
   categoryName: {
-    fontSize: 14,
-    fontWeight: '800' as const,
+    fontFamily: Colors.fontDisplay,
+    fontSize: 17,
+    fontWeight: '500' as const,
     color: Colors.textPrimary,
     letterSpacing: -0.2,
   },
@@ -468,7 +701,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.card,
-    borderRadius: 14,
+    borderRadius: Colors.radiusLg,
     padding: 14,
     marginBottom: 8,
     borderWidth: 1,
@@ -477,7 +710,7 @@ const styles = StyleSheet.create({
   recentItemIcon: {
     width: 40,
     height: 40,
-    borderRadius: 12,
+    borderRadius: Colors.radiusMd,
     backgroundColor: Colors.goldSubtle,
     alignItems: 'center',
     justifyContent: 'center',
@@ -488,7 +721,7 @@ const styles = StyleSheet.create({
   },
   recentItemName: {
     fontSize: 15,
-    fontWeight: '800' as const,
+    fontWeight: '600' as const,
     color: Colors.textPrimary,
     letterSpacing: -0.2,
   },
@@ -503,7 +736,7 @@ const styles = StyleSheet.create({
   },
   recentItemPrice: {
     fontSize: 15,
-    fontWeight: '800' as const,
+    fontWeight: '600' as const,
     color: Colors.textPrimary,
     letterSpacing: -0.3,
   },
@@ -519,7 +752,7 @@ const styles = StyleSheet.create({
   emptyIcon: {
     width: 80,
     height: 80,
-    borderRadius: 40,
+    borderRadius: Colors.radiusLg,
     backgroundColor: Colors.goldSubtle,
     alignItems: 'center',
     justifyContent: 'center',
@@ -528,8 +761,9 @@ const styles = StyleSheet.create({
     borderColor: Colors.cardBorder,
   },
   emptyTitle: {
-    fontSize: 20,
-    fontWeight: '900' as const,
+    fontFamily: Colors.fontDisplay,
+    fontSize: 26,
+    fontWeight: '500' as const,
     color: Colors.textPrimary,
     marginBottom: 8,
     letterSpacing: -0.3,
@@ -550,7 +784,7 @@ const styles = StyleSheet.create({
   },
   trustCard: {
     backgroundColor: Colors.card,
-    borderRadius: 14,
+    borderRadius: Colors.radiusLg,
     borderWidth: 1,
     borderColor: Colors.cardBorder,
     padding: 14,
@@ -559,15 +793,16 @@ const styles = StyleSheet.create({
   trustIconWrap: {
     width: 34,
     height: 34,
-    borderRadius: 10,
+    borderRadius: Colors.radiusMd,
     backgroundColor: Colors.goldSubtle,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 10,
   },
   trustTitle: {
-    fontSize: 14,
-    fontWeight: '800' as const,
+    fontFamily: Colors.fontDisplay,
+    fontSize: 18,
+    fontWeight: '500' as const,
     color: Colors.textPrimary,
     marginBottom: 4,
   },
@@ -583,12 +818,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.gold,
     paddingHorizontal: 24,
     paddingVertical: 14,
-    borderRadius: 14,
+    borderRadius: Colors.radiusMd,
     gap: 8,
   },
   emptyButtonText: {
     fontSize: 15,
-    fontWeight: '800' as const,
+    fontWeight: '600' as const,
     color: Colors.white,
     letterSpacing: 0.3,
   },

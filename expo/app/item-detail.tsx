@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
   backBtn: {
     width: 40,
     height: 40,
-    borderRadius: 12,
+    borderRadius: Colors.radiusMd,
     backgroundColor: Colors.card,
     alignItems: 'center',
     justifyContent: 'center',
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
   actionBtn: {
     width: 40,
     height: 40,
-    borderRadius: 12,
+    borderRadius: Colors.radiusMd,
     backgroundColor: Colors.card,
     alignItems: 'center',
     justifyContent: 'center',
@@ -365,7 +365,7 @@ const styles = StyleSheet.create({
   heroIcon: {
     width: 72,
     height: 72,
-    borderRadius: 20,
+    borderRadius: Colors.radiusLg,
     backgroundColor: Colors.goldSubtle,
     alignItems: 'center',
     justifyContent: 'center',
@@ -374,15 +374,17 @@ const styles = StyleSheet.create({
     borderColor: Colors.cardBorder,
   },
   heroName: {
-    fontSize: 24,
-    fontWeight: '900' as const,
+    fontFamily: Colors.fontDisplay,
+    fontSize: 34,
+    fontWeight: '500' as const,
     color: Colors.textPrimary,
     textAlign: 'center',
     letterSpacing: -0.3,
   },
   heroNameInput: {
-    fontSize: 24,
-    fontWeight: '900' as const,
+    fontFamily: Colors.fontDisplay,
+    fontSize: 34,
+    fontWeight: '500' as const,
     color: Colors.textPrimary,
     textAlign: 'center',
     borderBottomWidth: 2,
@@ -399,7 +401,7 @@ const styles = StyleSheet.create({
   },
   valueCard: {
     backgroundColor: Colors.card,
-    borderRadius: 18,
+    borderRadius: Colors.radiusLg,
     padding: 18,
     marginBottom: 20,
     borderWidth: 1,
@@ -422,13 +424,14 @@ const styles = StyleSheet.create({
   },
   valueLabel: {
     fontSize: 10,
-    fontWeight: '800' as const,
+    fontWeight: '500' as const,
     color: Colors.textTertiary,
     letterSpacing: 1.5,
   },
   valueAmount: {
-    fontSize: 28,
-    fontWeight: '900' as const,
+    fontFamily: Colors.fontDisplay,
+    fontSize: 38,
+    fontWeight: '500' as const,
     color: Colors.textPrimary,
     marginTop: 4,
     letterSpacing: -0.5,
@@ -442,7 +445,7 @@ const styles = StyleSheet.create({
     gap: 4,
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 12,
+    borderRadius: Colors.radiusMd,
   },
   changeBadgeGreen: {
     backgroundColor: Colors.greenMuted,
@@ -476,14 +479,14 @@ const styles = StyleSheet.create({
   },
   gainValue: {
     fontSize: 14,
-    fontWeight: '800' as const,
+    fontWeight: '600' as const,
   },
   detailsSection: {
     marginBottom: 20,
   },
   detailsSectionTitle: {
     fontSize: 12,
-    fontWeight: '800' as const,
+    fontWeight: '500' as const,
     color: Colors.textSecondary,
     marginBottom: 14,
     letterSpacing: 1.5,
@@ -494,7 +497,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.card,
     padding: 14,
-    borderRadius: 12,
+    borderRadius: Colors.radiusLg,
     marginBottom: 6,
     borderWidth: 1,
     borderColor: Colors.cardBorder,
@@ -507,7 +510,7 @@ const styles = StyleSheet.create({
   detailIcon: {
     width: 32,
     height: 32,
-    borderRadius: 8,
+    borderRadius: Colors.radiusMd,
     backgroundColor: Colors.goldSubtle,
     alignItems: 'center',
     justifyContent: 'center',
@@ -519,7 +522,7 @@ const styles = StyleSheet.create({
   },
   detailValue: {
     fontSize: 14,
-    fontWeight: '800' as const,
+    fontWeight: '600' as const,
     color: Colors.textPrimary,
     maxWidth: '45%' as any,
     textAlign: 'right' as const,
@@ -533,13 +536,13 @@ const styles = StyleSheet.create({
   },
   editLabel: {
     fontSize: 10,
-    fontWeight: '800' as const,
+    fontWeight: '500' as const,
     color: Colors.textTertiary,
     letterSpacing: 1.5,
   },
   editInput: {
     backgroundColor: Colors.card,
-    borderRadius: 10,
+    borderRadius: Colors.radiusLg,
     padding: 12,
     fontSize: 15,
     fontWeight: '600' as const,
@@ -549,7 +552,7 @@ const styles = StyleSheet.create({
   },
   soldBtn: {
     backgroundColor: Colors.card,
-    borderRadius: 14,
+    borderRadius: Colors.radiusMd,
     paddingVertical: 14,
     alignItems: 'center',
     borderWidth: 1,

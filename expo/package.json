@@ -4,7 +4,10 @@
   "version": "1.0.0",
   "scripts": {
     "start": "bunx rork start -p waxcopwbh4x5g1t6ydjz4 --tunnel",
+    "start-local": "bunx rork start -p waxcopwbh4x5g1t6ydjz4",
+    "start-ios": "bunx rork start -p waxcopwbh4x5g1t6ydjz4 --ios",
     "start-web": "bunx rork start -p waxcopwbh4x5g1t6ydjz4 --web --tunnel",
+    "start-web-local": "bunx rork start -p waxcopwbh4x5g1t6ydjz4 --web",
     "start-web-dev": "DEBUG=expo* bunx rork start -p waxcopwbh4x5g1t6ydjz4 --web --tunnel",
     "lint": "expo lint",
     "build:ios:development": "bunx eas-cli build --platform ios --profile development",

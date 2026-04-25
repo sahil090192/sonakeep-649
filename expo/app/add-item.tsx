@@ -96,7 +96,7 @@ export default function AddItemScreen() {
           <TouchableOpacity style={styles.closeBtn} onPress={() => router.back()}>
             <X size={20} color={Colors.textPrimary} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>ADD ITEM</Text>
+          <Text style={styles.headerTitle}>Add Item</Text>
           <View style={{ width: 40 }} />
         </View>
 
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
   closeBtn: {
     width: 40,
     height: 40,
-    borderRadius: 12,
+    borderRadius: Colors.radiusMd,
     backgroundColor: Colors.card,
     alignItems: 'center',
     justifyContent: 'center',
@@ -293,10 +293,11 @@ const styles = StyleSheet.create({
     borderColor: Colors.cardBorder,
   },
   headerTitle: {
-    fontSize: 14,
-    fontWeight: '900' as const,
+    fontFamily: Colors.fontDisplay,
+    fontSize: 24,
+    fontWeight: '500' as const,
     color: Colors.textPrimary,
-    letterSpacing: 2,
+    letterSpacing: 0,
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -307,7 +308,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 10,
-    fontWeight: '800' as const,
+    fontWeight: '500' as const,
     color: Colors.textTertiary,
     marginBottom: 8,
     letterSpacing: 1.5,
@@ -323,7 +324,7 @@ const styles = StyleSheet.create({
     gap: 6,
     paddingHorizontal: 14,
     paddingVertical: 10,
-    borderRadius: 12,
+    borderRadius: Colors.radiusMd,
     backgroundColor: Colors.card,
     borderWidth: 1,
     borderColor: Colors.cardBorder,
@@ -339,11 +340,11 @@ const styles = StyleSheet.create({
   },
   categoryChipTextActive: {
     color: Colors.gold,
-    fontWeight: '700' as const,
+    fontWeight: '600' as const,
   },
   input: {
     backgroundColor: Colors.card,
-    borderRadius: 12,
+    borderRadius: Colors.radiusLg,
     padding: 14,
     fontSize: 15,
     fontWeight: '600' as const,
@@ -355,7 +356,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.card,
-    borderRadius: 12,
+    borderRadius: Colors.radiusLg,
     paddingHorizontal: 14,
     borderWidth: 1,
     borderColor: Colors.cardBorder,
@@ -380,19 +381,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: Colors.card,
-    borderRadius: 12,
+    borderRadius: Colors.radiusLg,
     padding: 14,
     borderWidth: 1,
     borderColor: Colors.cardBorder,
   },
   pickerText: {
     fontSize: 15,
-    fontWeight: '800' as const,
+    fontWeight: '600' as const,
     color: Colors.gold,
   },
   purityOptions: {
     backgroundColor: Colors.card,
-    borderRadius: 12,
+    borderRadius: Colors.radiusLg,
     marginBottom: 20,
     borderWidth: 1,
     borderColor: Colors.cardBorder,
@@ -416,18 +417,18 @@ const styles = StyleSheet.create({
   },
   purityOptionTextActive: {
     color: Colors.gold,
-    fontWeight: '800' as const,
+    fontWeight: '600' as const,
   },
   saveButton: {
     backgroundColor: Colors.gold,
-    borderRadius: 14,
+    borderRadius: Colors.radiusMd,
     paddingVertical: 16,
     alignItems: 'center',
     marginTop: 8,
   },
   saveButtonText: {
     fontSize: 15,
-    fontWeight: '900' as const,
+    fontWeight: '600' as const,
     color: Colors.white,
     letterSpacing: 0.5,
   },

@@ -74,7 +74,7 @@ export default function LockScreen() {
             </View>
           </View>
         </Animated.View>
-        <Text style={styles.appName}>SONAKEEP</Text>
+        <Text style={styles.appName}>SonaKeep</Text>
         <Text style={styles.subtitle}>Your gold portfolio is protected</Text>
       </View>
 
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   shieldOuter: {
     width: 110,
     height: 110,
-    borderRadius: 55,
+    borderRadius: Colors.radiusLg,
     backgroundColor: Colors.goldSubtle,
     alignItems: 'center',
     justifyContent: 'center',
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   shieldInner: {
     width: 80,
     height: 80,
-    borderRadius: 40,
+    borderRadius: Colors.radiusLg,
     backgroundColor: Colors.goldMuted,
     alignItems: 'center',
     justifyContent: 'center',
@@ -132,10 +132,11 @@ const styles = StyleSheet.create({
     borderColor: Colors.gold,
   },
   appName: {
-    fontSize: 28,
-    fontWeight: '900' as const,
+    fontFamily: Colors.fontDisplay,
+    fontSize: 44,
+    fontWeight: '500' as const,
     color: Colors.textPrimary,
-    letterSpacing: 3,
+    letterSpacing: 0,
   },
   subtitle: {
     fontSize: 14,
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
   unlockInner: {
     width: 72,
     height: 72,
-    borderRadius: 36,
+    borderRadius: Colors.radiusLg,
     backgroundColor: Colors.card,
     alignItems: 'center',
     justifyContent: 'center',
