@@ -112,7 +112,7 @@ export default function HoldingsScreen() {
   return (
     <Animated.View style={[styles.container, { paddingTop: insets.top, opacity: fadeAnim }]}>
       <View style={styles.header}>
-        <Text style={styles.title}>HOLDINGS</Text>
+        <Text style={styles.title}>Holdings</Text>
         <TouchableOpacity
           style={styles.addBtn}
           onPress={() => {
@@ -232,15 +232,16 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   title: {
-    fontSize: 26,
-    fontWeight: '900' as const,
+    fontFamily: Colors.fontDisplay,
+    fontSize: 42,
+    fontWeight: '500' as const,
     color: Colors.textPrimary,
-    letterSpacing: 2.5,
+    letterSpacing: 0,
   },
   addBtn: {
     width: 40,
     height: 40,
-    borderRadius: 12,
+    borderRadius: Colors.radiusMd,
     backgroundColor: Colors.gold,
     alignItems: 'center',
     justifyContent: 'center',
@@ -256,7 +257,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.card,
-    borderRadius: 12,
+    borderRadius: Colors.radiusLg,
     paddingHorizontal: 14,
     height: 44,
     gap: 10,
@@ -273,7 +274,7 @@ const styles = StyleSheet.create({
   filterBtn: {
     width: 44,
     height: 44,
-    borderRadius: 12,
+    borderRadius: Colors.radiusMd,
     backgroundColor: Colors.card,
     alignItems: 'center',
     justifyContent: 'center',
@@ -293,7 +294,7 @@ const styles = StyleSheet.create({
   },
   filterLabel: {
     fontSize: 10,
-    fontWeight: '800' as const,
+    fontWeight: '500' as const,
     color: Colors.textTertiary,
     letterSpacing: 1.5,
     marginBottom: 8,
@@ -306,7 +307,7 @@ const styles = StyleSheet.create({
   chip: {
     paddingHorizontal: 14,
     paddingVertical: 7,
-    borderRadius: 20,
+    borderRadius: Colors.radiusMd,
     backgroundColor: Colors.card,
     borderWidth: 1,
     borderColor: Colors.cardBorder,
@@ -322,7 +323,7 @@ const styles = StyleSheet.create({
   },
   chipTextActive: {
     color: Colors.gold,
-    fontWeight: '700' as const,
+    fontWeight: '600' as const,
   },
   countRow: {
     paddingHorizontal: 20,
@@ -342,7 +343,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.card,
-    borderRadius: 14,
+    borderRadius: Colors.radiusLg,
     padding: 14,
     marginBottom: 8,
     borderWidth: 1,
@@ -351,7 +352,7 @@ const styles = StyleSheet.create({
   itemIcon: {
     width: 44,
     height: 44,
-    borderRadius: 12,
+    borderRadius: Colors.radiusMd,
     backgroundColor: Colors.goldSubtle,
     alignItems: 'center',
     justifyContent: 'center',
@@ -362,7 +363,7 @@ const styles = StyleSheet.create({
   },
   itemName: {
     fontSize: 15,
-    fontWeight: '800' as const,
+    fontWeight: '600' as const,
     color: Colors.textPrimary,
     letterSpacing: -0.2,
   },
@@ -374,7 +375,7 @@ const styles = StyleSheet.create({
   },
   itemValue: {
     fontSize: 15,
-    fontWeight: '800' as const,
+    fontWeight: '600' as const,
     color: Colors.gold,
     letterSpacing: -0.3,
   },

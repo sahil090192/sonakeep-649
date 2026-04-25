@@ -10,7 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Eye, EyeOff, Scale, DollarSign, Info, Shield, Fingerprint, Smartphone, Database, BarChart3, Mail } from 'lucide-react-native';
+import { Eye, EyeOff, Scale, Info, Shield, Fingerprint, Smartphone, Database, BarChart3, Mail } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Colors from '@/constants/colors';
 import { useGold } from '@/contexts/GoldContext';
@@ -54,7 +54,7 @@ export default function SettingsScreen() {
   return (
     <Animated.View style={[styles.container, { paddingTop: insets.top, opacity: fadeAnim }]}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.title}>SETTINGS</Text>
+        <Text style={styles.title}>Settings</Text>
 
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>CURRENCY</Text>
@@ -68,9 +68,11 @@ export default function SettingsScreen() {
               >
                 <View style={styles.optionLeft}>
                   <View style={[styles.optionIcon, settings.currency === c.value && styles.optionIconActive]}>
-                    <DollarSign size={16} color={settings.currency === c.value ? Colors.gold : Colors.textTertiary} />
+                    <Text style={[styles.currencySymbol, settings.currency === c.value && styles.currencySymbolActive]}>
+                      {c.symbol}
+                    </Text>
                   </View>
-                  <View>
+                  <View style={styles.optionTextBlock}>
                     <Text style={styles.optionTitle}>{c.label}</Text>
                     <Text style={styles.optionSubtitle}>{c.symbol}</Text>
                   </View>
@@ -97,7 +99,7 @@ export default function SettingsScreen() {
                   <View style={[styles.optionIcon, settings.weightUnit === u.value && styles.optionIconActive]}>
                     <Scale size={16} color={settings.weightUnit === u.value ? Colors.gold : Colors.textTertiary} />
                   </View>
-                  <View>
+                  <View style={styles.optionTextBlock}>
                     <Text style={styles.optionTitle}>{u.label}</Text>
                     <Text style={styles.optionSubtitle}>{u.abbr}</Text>
                   </View>
@@ -122,18 +124,20 @@ export default function SettingsScreen() {
                     <Eye size={16} color={Colors.textTertiary} />
                   )}
                 </View>
-                <View>
+                <View style={styles.optionTextBlock}>
                   <Text style={styles.optionTitle}>Privacy Mode</Text>
                   <Text style={styles.optionSubtitle}>Hide monetary values across the app interface</Text>
                 </View>
               </View>
-              <Switch
-                value={settings.privacyMode}
-                onValueChange={togglePrivacy}
-                trackColor={{ false: Colors.cardBorder, true: Colors.goldLight }}
-                thumbColor={settings.privacyMode ? Colors.gold : Colors.textTertiary}
-                testID="settings-privacy-toggle"
-              />
+              <View style={styles.switchControl}>
+                <Switch
+                  value={settings.privacyMode}
+                  onValueChange={togglePrivacy}
+                  trackColor={{ false: Colors.cardBorder, true: Colors.goldLight }}
+                  thumbColor={settings.privacyMode ? Colors.gold : Colors.textTertiary}
+                  testID="settings-privacy-toggle"
+                />
+              </View>
             </View>
             <View style={styles.divider} />
             <View style={styles.infoRow}>
@@ -159,18 +163,20 @@ export default function SettingsScreen() {
                   <View style={[styles.optionIcon, biometricEnabled && styles.optionIconActive]}>
                     <Fingerprint size={16} color={biometricEnabled ? Colors.gold : Colors.textTertiary} />
                   </View>
-                  <View>
+                  <View style={styles.optionTextBlock}>
                     <Text style={styles.optionTitle}>{biometricType} Lock</Text>
                     <Text style={styles.optionSubtitle}>Require {biometricType.toLowerCase()} to reopen the app</Text>
                   </View>
                 </View>
-                <Switch
-                  value={biometricEnabled}
-                  onValueChange={handleBiometricToggle}
-                  trackColor={{ false: Colors.cardBorder, true: Colors.goldLight }}
-                  thumbColor={biometricEnabled ? Colors.gold : Colors.textTertiary}
-                  testID="settings-biometric-toggle"
-                />
+                <View style={styles.switchControl}>
+                  <Switch
+                    value={biometricEnabled}
+                    onValueChange={handleBiometricToggle}
+                    trackColor={{ false: Colors.cardBorder, true: Colors.goldLight }}
+                    thumbColor={biometricEnabled ? Colors.gold : Colors.textTertiary}
+                    testID="settings-biometric-toggle"
+                  />
+                </View>
               </View>
               <View style={styles.divider} />
               <View style={styles.infoRow}>
@@ -225,7 +231,7 @@ export default function SettingsScreen() {
                 <View style={styles.optionIcon}>
                   <Info size={16} color={Colors.textTertiary} />
                 </View>
-                <View>
+                <View style={styles.optionTextBlock}>
                   <Text style={styles.optionTitle}>Version</Text>
                   <Text style={styles.optionSubtitle}>1.0.0</Text>
                 </View>
@@ -237,7 +243,7 @@ export default function SettingsScreen() {
                 <View style={styles.optionIcon}>
                   <Shield size={16} color={Colors.textTertiary} />
                 </View>
-                <View>
+                <View style={styles.optionTextBlock}>
                   <Text style={styles.optionTitle}>Items Stored</Text>
                   <Text style={styles.optionSubtitle}>{items.length} items on this device</Text>
                 </View>
@@ -272,26 +278,27 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   title: {
-    fontSize: 26,
-    fontWeight: '900' as const,
+    fontFamily: Colors.fontDisplay,
+    fontSize: 42,
+    fontWeight: '500' as const,
     color: Colors.textPrimary,
     marginTop: 12,
     marginBottom: 24,
-    letterSpacing: 2.5,
+    letterSpacing: 0,
   },
   section: {
     marginBottom: 28,
   },
   sectionLabel: {
     fontSize: 10,
-    fontWeight: '800' as const,
+    fontWeight: '500' as const,
     color: Colors.textTertiary,
     letterSpacing: 1.5,
     marginBottom: 10,
   },
   optionGroup: {
     backgroundColor: Colors.card,
-    borderRadius: 16,
+    borderRadius: Colors.radiusLg,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: Colors.cardBorder,
@@ -312,14 +319,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     flex: 1,
+    minWidth: 0,
+  },
+  optionTextBlock: {
+    flex: 1,
+    minWidth: 0,
   },
   infoTextBlock: {
     flex: 1,
+    minWidth: 0,
   },
   optionIcon: {
     width: 36,
     height: 36,
-    borderRadius: 10,
+    borderRadius: Colors.radiusMd,
     backgroundColor: Colors.goldSubtle,
     alignItems: 'center',
     justifyContent: 'center',
@@ -327,9 +340,18 @@ const styles = StyleSheet.create({
   optionIconActive: {
     backgroundColor: Colors.goldMuted,
   },
+  currencySymbol: {
+    fontSize: 18,
+    fontWeight: '600' as const,
+    color: Colors.textTertiary,
+    textAlign: 'center' as const,
+  },
+  currencySymbolActive: {
+    color: Colors.gold,
+  },
   optionTitle: {
     fontSize: 15,
-    fontWeight: '700' as const,
+    fontWeight: '600' as const,
     color: Colors.textPrimary,
     letterSpacing: -0.2,
   },
@@ -339,6 +361,7 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     marginTop: 1,
     lineHeight: 17,
+    flexShrink: 1,
   },
   radio: {
     width: 20,
@@ -360,10 +383,15 @@ const styles = StyleSheet.create({
   },
   switchRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
     padding: 14,
-    gap: 12,
+    gap: 10,
+  },
+  switchControl: {
+    width: 58,
+    alignItems: 'flex-end',
+    paddingTop: 2,
   },
   infoRow: {
     flexDirection: 'row',
