@@ -75,7 +75,7 @@ export default function RatesScreen() {
   return (
     <Animated.View style={[styles.container, { paddingTop: insets.top, opacity: fadeAnim }]}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.title}>GOLD RATES</Text>
+        <Text style={styles.title}>Gold Rates</Text>
         <View style={styles.lastUpdated}>
           <Clock size={12} color={Colors.textTertiary} />
           <Text style={styles.lastUpdatedText}>{formatLastUpdated()}</Text>
@@ -198,11 +198,12 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   title: {
-    fontSize: 26,
-    fontWeight: '900' as const,
+    fontFamily: Colors.fontDisplay,
+    fontSize: 42,
+    fontWeight: '500' as const,
     color: Colors.textPrimary,
     marginTop: 12,
-    letterSpacing: 2.5,
+    letterSpacing: 0,
   },
   lastUpdated: {
     flexDirection: 'row',
@@ -218,7 +219,7 @@ const styles = StyleSheet.create({
   },
   statusBanner: {
     backgroundColor: Colors.card,
-    borderRadius: 14,
+    borderRadius: Colors.radiusLg,
     padding: 14,
     marginBottom: 16,
     borderWidth: 1,
@@ -238,7 +239,7 @@ const styles = StyleSheet.create({
   },
   spotCard: {
     backgroundColor: Colors.card,
-    borderRadius: 20,
+    borderRadius: Colors.radiusLg,
     padding: 20,
     marginBottom: 24,
     borderWidth: 1,
@@ -256,13 +257,14 @@ const styles = StyleSheet.create({
   },
   spotLabel: {
     fontSize: 11,
-    fontWeight: '800' as const,
+    fontWeight: '500' as const,
     color: Colors.textTertiary,
     letterSpacing: 1.5,
   },
   spotValue: {
-    fontSize: 32,
-    fontWeight: '900' as const,
+    fontFamily: Colors.fontDisplay,
+    fontSize: 42,
+    fontWeight: '500' as const,
     color: Colors.textPrimary,
     marginTop: 6,
     letterSpacing: -0.5,
@@ -315,7 +317,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 12,
-    fontWeight: '800' as const,
+    fontWeight: '500' as const,
     color: Colors.textSecondary,
     letterSpacing: 1.5,
   },
@@ -324,7 +326,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: Colors.card,
-    borderRadius: 14,
+    borderRadius: Colors.radiusLg,
     padding: 14,
     marginBottom: 8,
     borderWidth: 1,
@@ -338,20 +340,20 @@ const styles = StyleSheet.create({
   purityBadge: {
     width: 44,
     height: 44,
-    borderRadius: 12,
+    borderRadius: Colors.radiusMd,
     backgroundColor: Colors.goldSubtle,
     alignItems: 'center',
     justifyContent: 'center',
   },
   purityBadgeText: {
     fontSize: 13,
-    fontWeight: '900' as const,
+    fontWeight: '600' as const,
     color: Colors.gold,
     letterSpacing: 0.5,
   },
   purityName: {
     fontSize: 14,
-    fontWeight: '800' as const,
+    fontWeight: '600' as const,
     color: Colors.textPrimary,
     letterSpacing: -0.2,
   },
@@ -366,7 +368,7 @@ const styles = StyleSheet.create({
   },
   rateValue: {
     fontSize: 15,
-    fontWeight: '800' as const,
+    fontWeight: '600' as const,
     color: Colors.textPrimary,
     letterSpacing: -0.3,
   },
@@ -376,7 +378,7 @@ const styles = StyleSheet.create({
     gap: 4,
     paddingHorizontal: 8,
     paddingVertical: 3,
-    borderRadius: 10,
+    borderRadius: Colors.radiusMd,
     marginTop: 4,
   },
   rateBadgeGreen: {

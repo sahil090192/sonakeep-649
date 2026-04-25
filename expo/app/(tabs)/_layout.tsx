@@ -16,9 +16,9 @@ export default function TabLayout() {
           borderTopWidth: 1,
         },
         tabBarLabelStyle: {
-          fontSize: 10,
-          fontWeight: '700' as const,
-          letterSpacing: 0.5,
+          fontSize: 11,
+          fontWeight: '500' as const,
+          letterSpacing: 0.18,
         },
       }}
     >
