@@ -4,95 +4,86 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SonaKeep Privacy Policy</title>
-    <style>
-      :root {
-        --bg: #0f1115;
-        --panel: #171a20;
-        --panel-border: #272b33;
-        --text: #f5f2ea;
-        --muted: #b6b0a1;
-        --gold: #d4a84f;
-      }
-      * { box-sizing: border-box; }
-      body {
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background: linear-gradient(180deg, #0f1115 0%, #141821 100%);
-        color: var(--text);
-      }
-      .wrap { max-width: 900px; margin: 0 auto; padding: 24px; }
-      .nav { display:flex; justify-content:space-between; align-items:center; padding:8px 0 24px; }
-      a { color: inherit; text-decoration: none; }
-      .brand { font-weight:900; letter-spacing:0.18em; font-size:0.95rem; }
-      .panel {
-        background: rgba(23, 26, 32, 0.92);
-        border: 1px solid var(--panel-border);
-        border-radius: 24px;
-        padding: 28px;
-      }
-      h1 { margin:0 0 12px; font-size: clamp(2rem, 4vw, 3rem); letter-spacing:-0.04em; }
-      h2 { margin:28px 0 10px; font-size:1.1rem; }
-      p, li { color: var(--muted); line-height: 1.75; }
-      ul { padding-left: 20px; }
-      .meta { color: var(--gold); font-size:0.88rem; font-weight:700; }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&amp;family=Playfair+Display:wght@500;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="wrap">
-      <nav class="nav">
-        <a class="brand" href="index.html">SONAKEEP</a>
-        <a href="support.html">Support</a>
-      </nav>
+    <div class="page-shell">
+      <header class="site-nav" aria-label="Primary navigation">
+        <a class="brand-mark" href="index.html">SonaKeep</a>
+        <nav class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="support.html">Support</a>
+        </nav>
+      </header>
 
-      <div class="panel">
-        <div class="meta">Last updated: April 18, 2026</div>
+      <main class="document-page">
+        <p class="label">Last updated April 18, 2026</p>
         <h1>Privacy Policy</h1>
-        <p>
-          SonaKeep is designed as a local-first gold inventory and portfolio tracker. This policy explains
-          what data the app stores, what data may leave your device, and what is not collected in the current version.
+        <p class="lede">
+          SonaKeep is a local-first gold inventory and portfolio tracker. This policy
+          explains what the app stores, what may leave your device, and what is not
+          collected in the current version.
         </p>
 
-        <h2>What SonaKeep stores on your device</h2>
-        <ul>
-          <li>Gold item records that you enter manually</li>
-          <li>App settings such as currency, weight unit, privacy mode, and biometric-lock preference</li>
-          <li>Cached gold price responses and timestamps used for valuation display and fallback behavior</li>
-        </ul>
+        <section class="policy-stack">
+          <article>
+            <h2>What SonaKeep stores on your device</h2>
+            <ul>
+              <li>Gold item records that you enter manually</li>
+              <li>App settings such as currency, weight unit, privacy mode, and biometric-lock preference</li>
+              <li>Cached gold price responses and timestamps used for valuation display and fallback behavior</li>
+            </ul>
+          </article>
 
-        <h2>What data may leave your device</h2>
-        <p>
-          SonaKeep may request public gold pricing data from a configured third-party pricing provider so that it can display
-          current valuation estimates. These requests are used for market pricing only.
-        </p>
+          <article>
+            <h2>What data may leave your device</h2>
+            <p>
+              SonaKeep may request public gold pricing data from a configured third-party
+              pricing provider so it can display current valuation estimates. These
+              requests are used for market pricing only.
+            </p>
+          </article>
 
-        <h2>What SonaKeep does not collect in the current version</h2>
-        <ul>
-          <li>No account registration data</li>
-          <li>No email address or phone number collection inside the app</li>
-          <li>No contacts</li>
-          <li>No precise or coarse location access</li>
-          <li>No photo library or camera access</li>
-          <li>No advertising identifiers</li>
-          <li>No analytics or ad-tracking SDKs in the current version</li>
-        </ul>
+          <article>
+            <h2>What SonaKeep does not collect</h2>
+            <ul>
+              <li>No account registration data</li>
+              <li>No email address or phone number collection inside the app</li>
+              <li>No contacts, location, photo library, or camera access</li>
+              <li>No advertising identifiers</li>
+              <li>No analytics or ad-tracking SDKs in the current version</li>
+            </ul>
+          </article>
 
-        <h2>Device security features</h2>
-        <p>
-          On supported devices, SonaKeep can use biometric or device authentication to protect app access. This is a device-level
-          security convenience feature and not a substitute for securing your phone and backups properly.
-        </p>
+          <article>
+            <h2>Device security features</h2>
+            <p>
+              On supported devices, SonaKeep can use biometric or device authentication
+              to protect app access. This is a device-level security convenience feature.
+            </p>
+          </article>
 
-        <h2>Retention and control</h2>
-        <p>
-          Because SonaKeep currently stores its core data locally on your device, deleting the app or clearing local data may remove
-          your stored records unless you have backed up your device through your own device backup tooling.
-        </p>
+          <article>
+            <h2>Retention and control</h2>
+            <p>
+              Because SonaKeep currently stores its core data locally, deleting the app
+              or clearing local data may remove stored records unless your device backup
+              preserves them.
+            </p>
+          </article>
+        </section>
+      </main>
 
-        <h2>Contact</h2>
-        <p>
-          For privacy questions, use the support contact listed on the support page.
-        </p>
-      </div>
+      <footer class="site-footer">
+        <span>Questions about privacy?</span>
+        <a href="support.html">Contact support</a>
+      </footer>
     </div>
   </body>
 </html>
